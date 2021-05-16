@@ -1,13 +1,13 @@
 import dotenv  from "dotenv"
+dotenv.config({ path: '.env' });
+
 import App from "./app";
 import config from "./configuration/config";
-import HomeController from "./controllers/home-controller";
-
-dotenv.config({ path: '.env' });
+import WeatherController from "./controllers/weather-controller";
 
 const app: App = new App(
     [
-      new HomeController()
+      new WeatherController()
     ],
     config.port
   )
