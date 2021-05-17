@@ -1,6 +1,11 @@
 import React from "react";
+import ApiService from "../services/ApiService";
 
-const Home =() =>{
+type HomePageProps = {
+  apiService: ApiService;
+}
+
+const Home =({ apiService }: HomePageProps) =>{
   return(
     <>
     <div>Home</div>

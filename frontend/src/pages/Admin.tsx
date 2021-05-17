@@ -4,8 +4,11 @@ import WeatherForecastsList from "../components/WeatherForecastsList/WeatherFore
 import { WeatherForecast } from "../interfaces/forecasts";
 import ApiService from "../services/ApiService";
 
-const Admin =() =>{
-  const [apiService] = useState<ApiService>(new ApiService());
+type AdminPageProps = {
+  apiService: ApiService;
+}
+
+const Admin =({ apiService }: AdminPageProps) =>{
   const [weatherForecasts, setWeatherForecasts] = useState<WeatherForecast[] | null>([]);
 
   useEffect(() => {
