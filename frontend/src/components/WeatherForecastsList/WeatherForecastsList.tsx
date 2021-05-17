@@ -7,7 +7,7 @@ type WeatherForecastsListProps = {
 const WeatherForecastsList = (props: WeatherForecastsListProps) =>{
   return(
     <>
-      <div className="flex-grow bg-white border-2 border-red-400 rounded p-3 m-3">
+      <div className="flex-grow bg-white border-2 border-red-200 rounded shadow-md p-3 m-3">
         <div className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate mb-5">
           Weather forecasts
         </div>
