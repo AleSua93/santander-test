@@ -21,7 +21,7 @@ const Admin =({ apiService }: AdminPageProps) =>{
     <>
     <div className="flex flex-col items-start md:flex-row p-5">
       <WeatherForecastsList forecasts={weatherForecasts} />
-      <CreateMeetupForm />
+      <CreateMeetupForm apiService={apiService}/>
     </div>
     </>
   )

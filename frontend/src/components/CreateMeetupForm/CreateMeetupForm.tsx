@@ -1,17 +1,65 @@
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
+import { MeetupFormData } from "../../interfaces/meetups";
+import ApiService from "../../services/ApiService";
 
-const CreateMeetupForm = () =>{
+type CreateMeetupFormProps = {
+  apiService: ApiService;
+}
+
+const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
   const [currentDate] = useState<Date>(new Date());
-  const [estimatedSixPacks, setEstimatedSixPacks] = useState<number | null>(null);
+
+  const [formData, setFormData] = useState<MeetupFormData>({
+    name: "",
+    numPeople: 1,
+    date: currentDate.toISOString().split("T")[0],
+    estimatedBeerPacks: 0
+  })
 
   const handleSubmit = async (ev: SyntheticEvent) => {
     ev.preventDefault();
 
-    console.log("submitting data...");
+    apiService.createMeetup(formData);
+  }
+
+  const handleNameChange = async (ev: SyntheticEvent<HTMLInputElement>) => {
+    ev.preventDefault();
+
+    setFormData({
+      ...formData,
+      name: ev.currentTarget.value
+    })
   }
 
   const handleDateChange = async (ev: SyntheticEvent<HTMLInputElement>) => {
-    console.log(`date changed to ${ev.currentTarget.value}`);
+    ev.preventDefault();
+
+    setFormData({
+      ...formData,
+      date: ev.currentTarget.value
+    })
+  }
+
+  const handleNumPeopleChange = async (ev: SyntheticEvent<HTMLInputElement>) => {
+    ev.preventDefault();
+
+    const newNumPeople = parseInt(ev.currentTarget.value);
+
+    setFormData({
+      ...formData,
+      numPeople: newNumPeople
+    })
+  }
+
+  const getEstimatedBeerPacks = async (ev: SyntheticEvent) => {
+    ev.preventDefault();
+
+    const estimatedBeerPacks = await apiService.getNumberOfBeerPacks(formData.date, formData.numPeople);
+
+    setFormData({
+      ...formData,
+      estimatedBeerPacks: estimatedBeerPacks
+    })
   }
 
   return(
@@ -24,11 +72,26 @@ const CreateMeetupForm = () =>{
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <label>
             <span className="mr-2">Meetup name</span>
-            <input type="text" name="name" className="p-1 shadow border border-red-700 rounded focus:outline-none focus:shadow-outline" />
+            <input
+              type="text"
+              name="name"
+              className="p-1 shadow border border-red-700 rounded focus:outline-none focus:shadow-outline" 
+              value={formData.name}
+              onChange={handleNameChange}
+              required
+            />
           </label>
           <label>
             <span className="mr-2">Estimated attendees</span>
-            <input type="number" name="num-people" className="p-1 shadow border border-red-700 rounded focus:outline-none focus:shadow-outline" />
+            <input
+              type="number"
+              name="num-people"
+              className="p-1 shadow border border-red-700 rounded focus:outline-none focus:shadow-outline" 
+              value={formData.numPeople}
+              onChange={handleNumPeopleChange}
+              min={1}
+              required
+            />
           </label>
           <label>
             <span className="mr-2">Date</span>
@@ -36,12 +99,17 @@ const CreateMeetupForm = () =>{
               type="date"
               name="date"
               min={currentDate.toISOString().split("T")[0]}
+              value={formData.date}
               onChange={handleDateChange}
               className="p-1 shadow border border-red-700 rounded focus:outline-none focus:shadow-outline" 
+              required
             />
           </label>
-          <div className="mr-2">Estimated 6-packs needed: {estimatedSixPacks}</div>
-          <input type="submit" value="Create new meetup" className="btn btn-santander"/>
+          <div className="flex flex-column items-center mr-2">
+            <div className="mr-5">Estimated 6-packs needed: {formData.estimatedBeerPacks}</div>
+            <button className="btn btn-santander" onClick={getEstimatedBeerPacks}>Refresh</button>
+          </div>
+          <button type="submit" className="btn btn-santander">Create new meetup</button>
         </form>
         </div>
       </div>
