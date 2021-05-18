@@ -7,7 +7,7 @@ const Layout =({children}: LayoutProps) =>{
       <div>
         <Navbar />
       </div>
-      <main className="h-screen bg-gray-200">{children}</main>
+      <main>{children}</main>
     </>
   )
 }

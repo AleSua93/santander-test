@@ -6,7 +6,7 @@ export interface MeetupAttributes {
   name: string;
   date: string;
   numPeople: number;
-  estimatedBeerPacks: number;
+  estimatedBeerPacks?: number;
   tempInCelsius?: number;
 };
 
@@ -24,9 +24,6 @@ interface MeetupInstance
       createdAt?: Date;
       updatedAt?: Date;
     }
-
-
-// ... instances code
 
 const Meetup = sequelize.define<MeetupInstance>(
   'Meetup',
@@ -51,7 +48,7 @@ const Meetup = sequelize.define<MeetupInstance>(
       type: DataTypes.INTEGER,
     },
     estimatedBeerPacks: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.INTEGER,
     },
     tempInCelsius: {

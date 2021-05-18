@@ -1,16 +1,20 @@
 import express, { Request, Response } from "express";
 import Meetup, { MeetupAttributes } from "../db/models/meetup";
 import Controller from "../interfaces/controller";
+import BeersService from "../services/beers-service";
 import WeatherService from "../services/weather-service";
+import BeersController from "./beers-controller";
 
 class MeetupsController implements Controller {
   public path = '/meetups';
   public router = express.Router();
   private weatherService: WeatherService;
+  private beerService: BeersService;
 
   constructor() {
     this.initializeRoutes();
     this.weatherService = new WeatherService();
+    this.beerService = new BeersService();
   }
 
   private initializeRoutes() {
@@ -22,10 +26,15 @@ class MeetupsController implements Controller {
     try {
       const meetupAttributes = req.body as MeetupAttributes;
       const forecast = await this.weatherService.getForecast(meetupAttributes.date);
+      
+      if (forecast) {
+        meetupAttributes.tempInCelsius = forecast.temp;
+        meetupAttributes.estimatedBeerPacks = 
+          this.beerService.getNumBeerPacks(forecast.temp, meetupAttributes.numPeople);
+      }
 
       const meetup = await Meetup.create({
-        ...meetupAttributes,
-        tempInCelsius: forecast ? forecast.temp : undefined
+        ...meetupAttributes
       });
 
       res.status(200).json(meetup);
@@ -38,7 +47,6 @@ class MeetupsController implements Controller {
   private async getUpcomingMeetups(req: Request, res: Response): Promise<void> {
     try {
       const meetups = await Meetup.findAll();
-
       res.status(200).json(meetups);
     } catch (err) {
       res.status(400).json(err);

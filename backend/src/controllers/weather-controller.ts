@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import Controller from "../interfaces/controller";
 import { WeatherForecast, BeersForecast } from "../interfaces/forecasts";
-import BeersService from "../services/beers-service";
 import WeatherService from "../services/weather-service";
 
 class WeatherController implements Controller {

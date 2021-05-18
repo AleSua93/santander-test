@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.INTEGER 
       },
       estimatedBeerPacks: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.INTEGER 
       },
       tempInCelsius: {

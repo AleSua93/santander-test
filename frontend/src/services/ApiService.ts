@@ -33,7 +33,7 @@ export default class ApiService {
     return data.beerPacks;
   }
 
-  public async createMeetup(form: Meetup) {
+  public async createMeetup(form: Meetup): Promise<Meetup> {
     const endpointUrl = new URL(`${this.apiUrl}/meetups`);
 
     const options: RequestInit = {
@@ -47,7 +47,7 @@ export default class ApiService {
     const response = await fetch(endpointUrl.toString(), options);
     const data = await response.json();
 
-    console.log(data);
+    return data as Meetup;
   }
 
   public async getUpcomingMeetups(): Promise<Meetup[]> {
