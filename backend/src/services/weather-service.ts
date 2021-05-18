@@ -35,12 +35,14 @@ export default class WeatherService {
   }
   
   // Returns a forecast for a particular date
-  async getForecast(date: string): Promise<WeatherForecast> {
+  async getForecast(date: string): Promise<WeatherForecast | null> {
     const response = await axios.get(this.forecastsEndpoint);
 
     const forecast = response.data.data.find((el: any) => {
       return el.datetime === date;
     });
+
+    if (!forecast) return null;
 
     return {
       date: forecast.datetime,

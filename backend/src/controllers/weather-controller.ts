@@ -8,12 +8,10 @@ class WeatherController implements Controller {
   public path = '/weather';
   public router = express.Router();
   private weatherService: WeatherService;
-  private beersService: BeersService;
 
   constructor() {
     this.initializeRoutes();
     this.weatherService = new WeatherService();
-    this.beersService = new BeersService();
   }
 
   private initializeRoutes() {

@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useState } from "react";
-import { MeetupFormData } from "../../interfaces/meetups";
+import { Meetup } from "../../interfaces/meetups";
 import ApiService from "../../services/ApiService";
 
 type CreateMeetupFormProps = {
@@ -9,7 +9,7 @@ type CreateMeetupFormProps = {
 const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
   const [currentDate] = useState<Date>(new Date());
 
-  const [formData, setFormData] = useState<MeetupFormData>({
+  const [formData, setFormData] = useState<Meetup>({
     name: "",
     numPeople: 1,
     date: currentDate.toISOString().split("T")[0],
@@ -55,6 +55,14 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
     ev.preventDefault();
 
     const estimatedBeerPacks = await apiService.getNumberOfBeerPacks(formData.date, formData.numPeople);
+
+    if (!estimatedBeerPacks) {
+      setFormData({
+        ...formData,
+        estimatedBeerPacks: -1
+      })
+      return;
+    }
 
     setFormData({
       ...formData,
@@ -106,7 +114,9 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
             />
           </label>
           <div className="flex flex-column items-center mr-2">
-            <div className="mr-5">Estimated 6-packs needed: {formData.estimatedBeerPacks}</div>
+            <div className="mr-5">
+              Estimated 6-packs needed: {formData.estimatedBeerPacks >= 0 ? formData.estimatedBeerPacks : "N/A"}
+            </div>
             <button className="btn btn-santander" onClick={getEstimatedBeerPacks}>Refresh</button>
           </div>
           <button type="submit" className="btn btn-santander">Create new meetup</button>

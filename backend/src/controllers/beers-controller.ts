@@ -30,7 +30,13 @@ class BeersController implements Controller {
         throw Error("Wrong query parameters");
       }
 
-      const weatherForecast: WeatherForecast = await this.weatherService.getForecast(date);
+      const weatherForecast = await this.weatherService.getForecast(date);
+
+      if (!weatherForecast) {
+        res.status(404).json("Forecast not available");
+        return;
+      }
+
       const numBeerPacks = await this.beersService.getNumBeerPacks(weatherForecast.temp, numPeople);
 
       const beersForecast: BeersForecast = {
