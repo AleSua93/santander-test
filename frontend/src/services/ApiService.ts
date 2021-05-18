@@ -28,7 +28,20 @@ export default class ApiService {
     return data.beerPacks;
   }
 
-  public async createMeetup(formData: MeetupFormData) {
-    console.log("Creating meetup");
+  public async createMeetup(form: MeetupFormData) {
+    const endpointUrl = new URL(`${this.apiUrl}/meetups`);
+
+    const options: RequestInit = {
+      method: "POST",
+      body: JSON.stringify(form),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }
+
+    const response = await fetch(endpointUrl.toString(), options);
+    const data = await response.json();
+
+    console.log(data);
   }
 } 
