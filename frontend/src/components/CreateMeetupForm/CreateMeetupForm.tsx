@@ -73,7 +73,7 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
         </div>
         <div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <label>
+          <label className="flex flex-col">
             <span className="mr-2">Meetup name</span>
             <input
               type="text"
@@ -84,7 +84,7 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
               required
             />
           </label>
-          <label>
+          <label className="flex flex-col">
             <span className="mr-2">Estimated attendees</span>
             <input
               type="number"
@@ -96,7 +96,7 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
               required
             />
           </label>
-          <label>
+          <label className="flex flex-col">
             <span className="mr-2">Date</span>
             <input
               type="date"
