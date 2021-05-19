@@ -37,7 +37,7 @@ const Meetup = sequelize.define<MeetupInstance>(
     },
     name: {
       allowNull: false,
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
     },
     date: {
       allowNull: false,

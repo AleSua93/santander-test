@@ -8,6 +8,7 @@ import {
   Route,
 } from "react-router-dom";
 import ApiService from '../../services/ApiService';
+import Login from '../../pages/Login';
 
 function App() {
   const [apiService] = useState<ApiService>(new ApiService());
@@ -18,6 +19,9 @@ function App() {
         <Switch>
           <Route exact path="/">
             <Home apiService={apiService}/>
+          </Route>
+          <Route exact path="/login">
+            <Login/>
           </Route>
           <Route exact path="/admin">
             <Admin apiService={apiService}/>
