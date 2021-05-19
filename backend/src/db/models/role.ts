@@ -41,5 +41,6 @@ const Role = sequelize.define<RoleInstance>(
 );
 
 Role.belongsToMany(User, { through: UserRole });
+User.belongsToMany(Role, { through: UserRole });
 
 export default Role;

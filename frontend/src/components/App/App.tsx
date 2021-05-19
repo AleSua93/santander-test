@@ -21,7 +21,7 @@ function App() {
             <Home apiService={apiService}/>
           </Route>
           <Route exact path="/login">
-            <Login/>
+            <Login apiService={apiService}/>
           </Route>
           <Route exact path="/admin">
             <Admin apiService={apiService}/>

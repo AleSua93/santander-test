@@ -1,4 +1,5 @@
 import { BeersForecast, WeatherForecast } from "../interfaces/forecasts";
+import { LoginData } from "../interfaces/login-data";
 import { Meetup } from "../interfaces/meetups";
 
 export default class ApiService {
@@ -59,6 +60,24 @@ export default class ApiService {
 
     const response = await fetch(endpointUrl.toString(), options);
     const data: Meetup[] = await response.json();
+
+    return data;
+  }
+
+  public async login(loginData: LoginData): Promise<any> {
+    const endpointUrl = new URL(`${this.apiUrl}/auth/login`);
+
+    const options: RequestInit = {
+      method: "POST",
+      body: JSON.stringify(loginData),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }
+
+    const response = await fetch(endpointUrl.toString(), options);
+    const data = await response.json();
+    console.log(data);
 
     return data;
   }

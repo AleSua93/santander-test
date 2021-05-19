@@ -1,6 +1,7 @@
 import { Model, Optional, DataTypes } from 'sequelize';
 import { sequelize } from './index';
-import Role from './role';
+import Sequelize from 'sequelize';
+import Role, { RoleInstance } from './role';
 import UserRole from './user-role';
 
 export interface UserAttributes {
@@ -23,6 +24,7 @@ export interface UserInstance
   UserAttributes {
       createdAt?: Date;
       updatedAt?: Date;
+      getRoles: Sequelize.BelongsToManyCreateAssociationMixin<RoleInstance>;
     }
 
 const User = sequelize.define<UserInstance>(
@@ -49,7 +51,5 @@ const User = sequelize.define<UserInstance>(
     }
   }
 );
-
-User.belongsToMany(Role, { through: UserRole });
 
 export default User;

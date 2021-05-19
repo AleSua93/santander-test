@@ -1,11 +1,12 @@
 import React, { SyntheticEvent, useState } from "react";
+import { LoginData } from "../../interfaces/login-data";
+import ApiService from "../../services/ApiService";
 
-type LoginData = {
-  email: string;
-  password: string;
+type LoginFormProps = {
+  apiService: ApiService;
 }
 
-const LoginForm = () =>{
+const LoginForm = ({ apiService }: LoginFormProps) =>{
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
     password: ""
@@ -13,7 +14,7 @@ const LoginForm = () =>{
 
   const handleSubmit = async (ev: SyntheticEvent) => {
     ev.preventDefault();
-    console.log("Submitting...");
+    await apiService.login(loginData);
   }
 
   const handleEmailChange = (ev: SyntheticEvent<HTMLInputElement>) => {
@@ -34,7 +35,7 @@ const LoginForm = () =>{
 
   return(
     <>
-      <div className="flex flex-col bg-white border-2 border-red-200 rounded shadow-md p-5 md:w-2/5">
+      <div className="flex flex-col bg-white border-2 border-red-200 rounded shadow-md p-5 sm:w-1/3">
         <div className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate mb-5">
           Login
         </div>
@@ -53,7 +54,7 @@ const LoginForm = () =>{
           <label className="flex flex-col">
             <span className="mr-2">Password</span>
             <input
-              type="text"
+              type="password"
               name="password"
               className="p-1 shadow border border-red-700 rounded focus:outline-none focus:shadow-outline" 
               value={loginData.password}
@@ -61,6 +62,7 @@ const LoginForm = () =>{
               required
             />
           </label>
+          <button type="submit" className="btn btn-santander">Login</button>
         </form>
       </div>
     </>
