@@ -110,7 +110,7 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
           </label>
           <div className="flex flex-column items-center mr-2">
             <div className="mr-5">
-              Estimated 6-packs needed: {estimatedBeerPacks ?? "N/A"}
+              Estimated 6-packs needed: <span className="font-bold">{estimatedBeerPacks ?? "N/A"}</span>
             </div>
             <button className="btn btn-santander" onClick={getEstimatedBeerPacks}>Calculate</button>
           </div>
