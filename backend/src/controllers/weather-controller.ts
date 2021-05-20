@@ -21,6 +21,10 @@ class WeatherController implements Controller {
       `${this.path}/forecasts`,
       expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
       this.getForecasts.bind(this));
+    this.router.get(
+      `${this.path}/cache`,
+      // expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.refreshCache.bind(this));
   }
 
   private async getForecasts(req: Request, res: Response): Promise<void> {
@@ -34,6 +38,16 @@ class WeatherController implements Controller {
       const weatherForecasts: WeatherForecast[] = await this.weatherService.getForecasts();
 
       res.status(200).json(weatherForecasts);
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  }
+
+  private async refreshCache(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.weatherService.refreshCache();
+
+      res.status(200).json("test");
     } catch (err) {
       res.status(400).json(err);
     }
