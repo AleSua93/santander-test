@@ -6,26 +6,36 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from "react-router-dom";
 import ApiService from '../../services/ApiService';
 import Login from '../../pages/Login';
+import { useAuth } from '../../hooks/useAuth';
 
 function App() {
   const [apiService] = useState<ApiService>(new ApiService());
+  const auth = useAuth();
 
   return (
-    <Router>
+      <Router>
       <Layout>
-        <Switch>
-          <Route exact path="/">
-            <Home apiService={apiService}/>
+      <Switch>
+      {auth && auth.jwt ?
+      <>
+        <Route exact path="/">
+          <Home apiService={apiService}/>
+        </Route>
+        <Route exact path="/admin">
+          <Admin apiService={apiService}/>
+        </Route>
+      </> :
+        <>
+          <Redirect to="/login"/>
+          <Route path="/login">
+            <Login />
           </Route>
-          <Route exact path="/login">
-            <Login apiService={apiService}/>
-          </Route>
-          <Route exact path="/admin">
-            <Admin apiService={apiService}/>
-          </Route>
+        </>
+       }  
         </Switch>
       </Layout>
     </Router>

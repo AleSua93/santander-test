@@ -1,12 +1,12 @@
 import React, { SyntheticEvent, useState } from "react";
+import { useHistory } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
 import { LoginData } from "../../interfaces/login-data";
-import ApiService from "../../services/ApiService";
 
-type LoginFormProps = {
-  apiService: ApiService;
-}
+const LoginForm = () =>{
+  const auth = useAuth();
+  const history = useHistory();
 
-const LoginForm = ({ apiService }: LoginFormProps) =>{
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
     password: ""
@@ -14,7 +14,10 @@ const LoginForm = ({ apiService }: LoginFormProps) =>{
 
   const handleSubmit = async (ev: SyntheticEvent) => {
     ev.preventDefault();
-    await apiService.login(loginData);
+    if (auth) {
+      await auth.login(loginData);
+      history.push("/admin");
+    }
   }
 
   const handleEmailChange = (ev: SyntheticEvent<HTMLInputElement>) => {

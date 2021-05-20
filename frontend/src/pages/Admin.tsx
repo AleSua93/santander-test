@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CreateMeetupForm from "../components/CreateMeetupForm/CreateMeetupForm";
 import WeatherForecastsList from "../components/WeatherForecastsList/WeatherForecastsList";
+import { useAuth } from "../hooks/useAuth";
 import { WeatherForecast } from "../interfaces/forecasts";
 import ApiService from "../services/ApiService";
 
@@ -10,9 +11,10 @@ type AdminPageProps = {
 
 const Admin =({ apiService }: AdminPageProps) =>{
   const [weatherForecasts, setWeatherForecasts] = useState<WeatherForecast[] | null>([]);
+  const auth = useAuth();
 
   useEffect(() => {
-    apiService.getWeatherForecasts().then((forecasts) => {
+    apiService.getWeatherForecasts(auth && auth.jwt).then((forecasts) => {
       setWeatherForecasts(forecasts);
     });
   }, []);

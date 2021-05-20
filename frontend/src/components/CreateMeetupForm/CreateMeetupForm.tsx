@@ -1,4 +1,5 @@
 import React, { SyntheticEvent, useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 import { Meetup } from "../../interfaces/meetups";
 import ApiService from "../../services/ApiService";
 
@@ -10,6 +11,7 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
   const [currentDate] = useState<Date>(new Date());
   const [estimatedBeerPacks, setEstimatedBeerPacks] = useState<number | null>(null);
   const [meetupCreatedNotification, setMeetupCreatedNotification] = useState<boolean>(false);
+  const auth = useAuth();
 
   const [formData, setFormData] = useState<Meetup>({
     name: "",
@@ -21,7 +23,7 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
   const handleSubmit = async (ev: SyntheticEvent) => {
     ev.preventDefault();
 
-    const meetup: Meetup = await apiService.createMeetup(formData);
+    const meetup: Meetup = await apiService.createMeetup(formData, auth && auth.jwt);
     if (meetup) {
       showCreatedNotification();
     }
@@ -61,7 +63,10 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
 
   const getEstimatedBeerPacks = async (ev: SyntheticEvent) => {
     ev.preventDefault();
-    const estimatedBeerPacks = await apiService.getNumberOfBeerPacks(formData.date, formData.numPeople);
+    const estimatedBeerPacks = await apiService.getNumberOfBeerPacks(
+      formData.date,
+      formData.numPeople,
+      auth && auth.jwt);
     setEstimatedBeerPacks(estimatedBeerPacks);
   }
 
