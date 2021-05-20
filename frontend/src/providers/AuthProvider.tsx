@@ -3,7 +3,7 @@ import AuthContext from "../contexts/AuthContext";
 import { LoginData } from "../interfaces/login-data";
 import AuthService from "../services/AuthService";
 import jwt_decode from "jwt-decode";
-import { UserInfo } from "../interfaces/user-info";
+import { UserInfo } from "../interfaces/auth";
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
@@ -18,10 +18,16 @@ function useProvideAuth() {
     setUserInfo(userInfo);
   }
 
+  const logout = async () => {
+    setJwt(undefined);
+    setUserInfo(undefined);
+  }
+
   return {
     jwt,
     userInfo,
-    login
+    login,
+    logout
   };
 }
 

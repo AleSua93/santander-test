@@ -7,7 +7,7 @@ import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
 import config from "../configuration/config";
 import { JWTPayload } from "../interfaces/auth";
-import Role from "../db/models/role";
+import Role, { RoleInstance } from "../db/models/role";
 
 class AuthController implements Controller {
   public path = '/auth';
@@ -47,11 +47,15 @@ class AuthController implements Controller {
 
       if (match) {
         const roles = await user.getRoles();
+        const roleNames = roles.map((role: RoleInstance) => {
+          return role.name;
+        })
+
         const tokenPayload: JWTPayload = {
           userId: user.id,
           username: user.username,
           email: user.email,
-          roles: roles
+          isAdmin: roleNames.includes('admin')
         }
         const token = jwt.sign(tokenPayload, config.jwtSigningKey);
 

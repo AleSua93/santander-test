@@ -25,9 +25,11 @@ function App() {
         <Route exact path="/">
           <Home apiService={apiService}/>
         </Route>
-        <Route exact path="/admin">
-          <Admin apiService={apiService}/>
-        </Route>
+        {auth.userInfo && auth.userInfo.isAdmin ?
+          <Route exact path="/admin">
+            <Admin apiService={apiService}/>
+          </Route>
+        : <></> }
       </> :
         <>
           <Redirect to="/login"/>

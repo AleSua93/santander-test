@@ -16,7 +16,7 @@ const LoginForm = () =>{
     ev.preventDefault();
     if (auth) {
       await auth.login(loginData);
-      history.push("/admin");
+      history.push("/");
     }
   }
 

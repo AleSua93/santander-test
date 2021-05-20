@@ -4,5 +4,5 @@ export interface JWTPayload {
   userId: number;
   username: string;
   email: string;
-  roles: RoleAttributes[];
+  isAdmin: boolean;
 }
