@@ -3,9 +3,11 @@ import User from "../db/models/user";
 import Controller from "../interfaces/controller";
 import { LoginData } from "../interfaces/login-data";
 import bcrypt from "bcrypt";
+import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
 import config from "../configuration/config";
-import { TokenResponse } from "../interfaces/authentication";
+import { JWTPayload } from "../interfaces/auth";
+import Role from "../db/models/role";
 
 class AuthController implements Controller {
   public path = '/auth';
@@ -17,6 +19,10 @@ class AuthController implements Controller {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/login`, this.login.bind(this));
+    this.router.get(
+      `${this.path}/test`,
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.test.bind(this));
   }
 
   private async login(req: Request, res: Response): Promise<void> {
@@ -28,32 +34,28 @@ class AuthController implements Controller {
       const user = await User.findOne({
         where: {
           email: loginData.email
+        },
+        include: { 
+          model: Role,
+          attributes: ['name']
         }
       });
 
-      if (!user) {
-        throw Error("User doesn't exist");
-      }
+      if (!user) throw Error("User doesn't exist");
 
       const match = await bcrypt.compare(loginData.password, user?.password);
-      console.log(match);
+
       if (match) {
-        const token = jwt.sign(user.toJSON(), config.jwtSigningKey);
-        const roles = user.getRoles();
-        console.log('hello');
-        console.log(roles);
+        const roles = await user.getRoles();
+        const tokenPayload: JWTPayload = {
+          userId: user.id,
+          username: user.username,
+          email: user.email,
+          roles: roles
+        }
+        const token = jwt.sign(tokenPayload, config.jwtSigningKey);
 
-        // const tokenResponse: TokenResponse = {
-        //   accessToken: token,
-        //   userInfo: {
-        //     id: user.id,
-        //     username: user.username,
-        //     email: user.email,
-        //     role: "hello"
-        //   }
-        // }
-
-        res.status(200).json(roles);
+        res.status(200).json(token);
       } else {
         throw Error("Invalid password");
       }
@@ -61,6 +63,15 @@ class AuthController implements Controller {
       res.status(400).json(err);
     }
   }
+
+  private async test(req: Request, res: Response): Promise<void> {
+    try {
+      res.status(200).json("test passed!");
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  }
+
 }
 
 export default AuthController;

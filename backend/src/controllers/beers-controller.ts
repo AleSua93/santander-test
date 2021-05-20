@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
+import expressJwt from "express-jwt";
+import config from "../configuration/config";
 import Controller from "../interfaces/controller";
-import { WeatherForecast, BeersForecast } from "../interfaces/forecasts";
+import { BeersForecast } from "../interfaces/forecasts";
 import BeersService from "../services/beers-service";
 import WeatherService from "../services/weather-service";
 
@@ -17,11 +19,13 @@ class BeersController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/forecast`, this.getForecasts.bind(this));
+    this.router.get(
+      `${this.path}/forecast`,
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.getForecast.bind(this));
   }
 
-  // Returns forecasts for the next 16 days
-  private async getForecasts(req: Request, res: Response): Promise<void> {
+  private async getForecast(req: Request, res: Response): Promise<void> {
     try {
       const date = req.query.date as string;
       const numPeople = parseInt(req.query.people as string);
@@ -43,6 +47,7 @@ class BeersController implements Controller {
         ...weatherForecast,
         beerPacks: numBeerPacks
       }
+
       res.status(200).json(beersForecast);
     } catch (err) {
       res.status(400).json(err);

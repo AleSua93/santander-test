@@ -1,7 +1,6 @@
 import { Model, Optional, DataTypes } from 'sequelize';
 import { sequelize } from './index';
 import User from './user';
-import UserRole from './user-role';
 
 export interface RoleAttributes {
   id: number;
@@ -40,7 +39,7 @@ const Role = sequelize.define<RoleInstance>(
   }
 );
 
-Role.belongsToMany(User, { through: UserRole });
-User.belongsToMany(Role, { through: UserRole });
+Role.belongsToMany(User, { through: 'UserRole' });
+User.belongsToMany(Role, { through: 'UserRole' });
 
 export default Role;

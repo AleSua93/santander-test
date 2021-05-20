@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
+import expressJwt from "express-jwt";
+import config from "../configuration/config";
 import Controller from "../interfaces/controller";
-import { WeatherForecast, BeersForecast } from "../interfaces/forecasts";
+import { WeatherForecast } from "../interfaces/forecasts";
 import WeatherService from "../services/weather-service";
 
 class WeatherController implements Controller {
@@ -14,10 +16,12 @@ class WeatherController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/forecasts`, this.getForecasts.bind(this));
+    this.router.get(
+      `${this.path}/forecasts`,
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.getForecasts.bind(this));
   }
 
-  // Returns forecasts for the next 16 days
   private async getForecasts(req: Request, res: Response): Promise<void> {
     try {
       const weatherForecasts: WeatherForecast[] = await this.weatherService.getForecasts();

@@ -1,9 +1,10 @@
 import express, { Request, Response } from "express";
+import expressJwt from "express-jwt";
+import config from "../configuration/config";
 import Meetup, { MeetupAttributes } from "../db/models/meetup";
 import Controller from "../interfaces/controller";
 import BeersService from "../services/beers-service";
 import WeatherService from "../services/weather-service";
-import BeersController from "./beers-controller";
 
 class MeetupsController implements Controller {
   public path = '/meetups';
@@ -18,7 +19,10 @@ class MeetupsController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}`, this.createMeetup.bind(this));
+    this.router.post(
+      `${this.path}`,
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.createMeetup.bind(this));
     this.router.get(`${this.path}`, this.getUpcomingMeetups.bind(this));
   }
 
