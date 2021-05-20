@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import expressJwt from "express-jwt";
 import config from "../configuration/config";
+import { JWTPayload } from "../interfaces/auth";
 import Controller from "../interfaces/controller";
 import { WeatherForecast } from "../interfaces/forecasts";
 import WeatherService from "../services/weather-service";
@@ -24,6 +25,12 @@ class WeatherController implements Controller {
 
   private async getForecasts(req: Request, res: Response): Promise<void> {
     try {
+      const tokenPayload: JWTPayload = req.user as JWTPayload;
+      if (!tokenPayload.isAdmin) {
+        res.sendStatus(401);
+        return;
+      }
+
       const weatherForecasts: WeatherForecast[] = await this.weatherService.getForecasts();
 
       res.status(200).json(weatherForecasts);

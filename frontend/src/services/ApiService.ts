@@ -67,11 +67,14 @@ export default class ApiService {
     return data as Meetup;
   }
 
-  public async getUpcomingMeetups(): Promise<Meetup[]> {
+  public async getUpcomingMeetups(jwt?: string): Promise<Meetup[]> {
     const endpointUrl = new URL(`${this.apiUrl}/meetups`);
 
     const options: RequestInit = {
-      method: "GET"
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + jwt,
+      },
     }
 
     const response = await fetch(endpointUrl.toString(), options);

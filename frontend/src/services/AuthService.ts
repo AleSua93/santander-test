@@ -1,4 +1,3 @@
-import jwtDecode from "jwt-decode";
 import { LoginData } from "../interfaces/login-data";
 
 export default class AuthService {
@@ -17,8 +16,6 @@ export default class AuthService {
 
     const response = await fetch(endpointUrl.toString(), options);
     const token = await response.json();
-
-    console.log(jwtDecode(token));
 
     return token;
   }

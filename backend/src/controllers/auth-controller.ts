@@ -19,10 +19,6 @@ class AuthController implements Controller {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/login`, this.login.bind(this));
-    this.router.get(
-      `${this.path}/test`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.test.bind(this));
   }
 
   private async login(req: Request, res: Response): Promise<void> {
@@ -57,7 +53,14 @@ class AuthController implements Controller {
           email: user.email,
           isAdmin: roleNames.includes('admin')
         }
-        const token = jwt.sign(tokenPayload, config.jwtSigningKey);
+        const token = jwt.sign(
+          tokenPayload,
+          config.jwtSigningKey,
+          {
+            algorithm: "HS256",
+            expiresIn: "15 minutes"
+          }
+        );
 
         res.status(200).json(token);
       } else {

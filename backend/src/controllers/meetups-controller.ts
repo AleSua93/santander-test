@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import expressJwt from "express-jwt";
 import config from "../configuration/config";
 import Meetup, { MeetupAttributes } from "../db/models/meetup";
+import { JWTPayload } from "../interfaces/auth";
 import Controller from "../interfaces/controller";
 import BeersService from "../services/beers-service";
 import WeatherService from "../services/weather-service";
@@ -23,11 +24,19 @@ class MeetupsController implements Controller {
       `${this.path}`,
       expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
       this.createMeetup.bind(this));
-    this.router.get(`${this.path}`, this.getUpcomingMeetups.bind(this));
+    this.router.get(`${this.path}`,
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.getUpcomingMeetups.bind(this));
   }
 
   private async createMeetup(req: Request, res: Response): Promise<void> {
     try {
+      const tokenPayload: JWTPayload = req.user as JWTPayload;
+      if (!tokenPayload.isAdmin) {
+        res.sendStatus(401);
+        return;
+      }
+      
       const meetupAttributes = req.body as MeetupAttributes;
       const forecast = await this.weatherService.getForecast(meetupAttributes.date);
       
