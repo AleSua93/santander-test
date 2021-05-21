@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import expressJwt from "express-jwt";
 import config from "../configuration/config";
 import Meetup, { MeetupAttributes } from "../db/models/meetup";
+import User from "../db/models/user";
 import { JWTPayload } from "../interfaces/auth";
 import Controller from "../interfaces/controller";
 import BeersService from "../services/beers-service";
@@ -27,6 +28,10 @@ class MeetupsController implements Controller {
     this.router.get(`${this.path}`,
       expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
       this.getUpcomingMeetups.bind(this));
+    this.router.post(
+        `${this.path}/:id/subscribe`,
+        expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+        this.subscribeToMeetup.bind(this));
   }
 
   private async createMeetup(req: Request, res: Response): Promise<void> {
@@ -59,8 +64,37 @@ class MeetupsController implements Controller {
 
   private async getUpcomingMeetups(req: Request, res: Response): Promise<void> {
     try {
-      const meetups = await Meetup.findAll();
+      const meetups = await Meetup.findAll({
+        include: {
+          model: User,
+          as: "Tests"
+          // attributes: ['id'],
+          // through: {attributes: []},
+        }
+      });
       res.status(200).json(meetups);
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  }
+
+  private async subscribeToMeetup(req: Request, res: Response): Promise<void> {
+    try {
+      const tokenPayload: JWTPayload = req.user as JWTPayload;
+
+      const meetup = await Meetup.findByPk(req.params.id);
+
+      if (meetup) {
+        const hasUser = await meetup.hasUser(tokenPayload.userId);
+        if (!hasUser) {
+          console.log("Subscribing user to meetup");
+          meetup.addUser(tokenPayload.userId);    
+        } else {
+          console.log("User is already subscribed to meetup");
+        }
+      }
+
+      res.status(200).json(meetup);
     } catch (err) {
       res.status(400).json(err);
     }

@@ -1,7 +1,5 @@
 import { BeersForecast, WeatherForecast } from "../interfaces/forecasts";
-import { LoginData } from "../interfaces/login-data";
-import jwt_decode from "jwt-decode";
-import { Meetup } from "../interfaces/meetups";
+import { Meetup, MeetupWithId } from "../interfaces/meetups";
 
 export default class ApiService {
   private apiUrl: string | undefined;
@@ -84,7 +82,24 @@ export default class ApiService {
     return data as Meetup;
   }
 
-  public async getUpcomingMeetups(jwt?: string): Promise<Meetup[]> {
+  public async subscribeToMeetup(meetupId: number, jwt?: string): Promise<boolean> {
+    const endpointUrl = new URL(`${this.apiUrl}/meetups/${meetupId}/subscribe`);
+
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + jwt,
+      },
+    }
+
+    const response = await fetch(endpointUrl.toString(), options);
+    const data = await response.json();
+    console.log(data);
+
+    return true;
+  }
+
+  public async getUpcomingMeetups(jwt?: string): Promise<MeetupWithId[]> {
     const endpointUrl = new URL(`${this.apiUrl}/meetups`);
 
     const options: RequestInit = {
@@ -95,7 +110,7 @@ export default class ApiService {
     }
 
     const response = await fetch(endpointUrl.toString(), options);
-    const data: Meetup[] = await response.json();
+    const data: MeetupWithId[] = await response.json();
 
     return data;
   }

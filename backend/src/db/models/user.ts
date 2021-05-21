@@ -2,6 +2,7 @@ import { Model, Optional, DataTypes } from 'sequelize';
 import { sequelize } from './index';
 import Sequelize from 'sequelize';
 import Role, { RoleInstance } from './role';
+import { MeetupInstance } from './meetup';
 
 export interface UserAttributes {
   id: number;
@@ -24,8 +25,9 @@ export interface UserInstance
       createdAt?: Date;
       updatedAt?: Date;
       role: RoleInstance;
-      addRole: Sequelize.BelongsToManyCreateAssociationMixin<RoleInstance>;
       getRoles: Sequelize.BelongsToManyGetAssociationsMixin<RoleInstance>;
+      getMeetups: Sequelize.BelongsToManyGetAssociationsMixin<MeetupInstance>;
+      addMeetup: Sequelize.BelongsToManyAddAssociationMixin<UserInstance, MeetupInstance>;
     }
 
 const User = sequelize.define<UserInstance>(

@@ -70,15 +70,6 @@ class AuthController implements Controller {
       res.status(400).json(err);
     }
   }
-
-  private async test(req: Request, res: Response): Promise<void> {
-    try {
-      res.status(200).json("test passed!");
-    } catch (err) {
-      res.status(400).json(err);
-    }
-  }
-
 }
 
 export default AuthController;

@@ -1,5 +1,7 @@
 import { Model, Optional, DataTypes } from 'sequelize';
 import { sequelize } from './index';
+import Sequelize from 'sequelize';
+import User, { UserInstance } from './user';
 
 export interface MeetupAttributes {
   id: number;
@@ -18,11 +20,14 @@ export interface MeetupAttributes {
 interface MeetupCreationAttributes
   extends Optional<MeetupAttributes, 'id'> {}
 
-interface MeetupInstance
+export interface MeetupInstance
   extends Model<MeetupAttributes, MeetupCreationAttributes>,
   MeetupAttributes {
       createdAt?: Date;
       updatedAt?: Date;
+      getUsers: Sequelize.BelongsToManyGetAssociationsMixin<UserInstance>;
+      addUser: Sequelize.BelongsToManyAddAssociationMixin<MeetupInstance, number>;
+      hasUser: Sequelize.BelongsToManyHasAssociationMixin<MeetupInstance, number>;
     }
 
 const Meetup = sequelize.define<MeetupInstance>(
@@ -57,5 +62,8 @@ const Meetup = sequelize.define<MeetupInstance>(
     }
   }
 );
+
+Meetup.belongsToMany(User, { through: 'UserMeetup' });
+User.belongsToMany(Meetup, { through: 'UserMeetup' });
 
 export default Meetup;
