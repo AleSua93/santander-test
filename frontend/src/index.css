@@ -18,7 +18,7 @@ code {
 }
 
 .btn {
-  @apply font-bold py-3 px-4 rounded;
+  @apply font-bold py-3 px-2 rounded;
 }
 .btn-santander {
   @apply bg-santander-red text-white;

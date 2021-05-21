@@ -11,6 +11,7 @@ type AdminPageProps = {
 
 const Admin =({ apiService }: AdminPageProps) =>{
   const [weatherForecasts, setWeatherForecasts] = useState<WeatherForecast[] | null>([]);
+  const [cacheRefreshedNotification, setCacheRefreshedNotification] = useState<boolean>(false);
   const auth = useAuth();
 
   useEffect(() => {
@@ -19,10 +20,24 @@ const Admin =({ apiService }: AdminPageProps) =>{
     });
   }, []);
 
+  const handleRefreshCache = async () => {
+    const forecasts = await apiService.refreshWeatherCache(auth && auth.jwt);
+    setWeatherForecasts(forecasts);
+
+    setCacheRefreshedNotification(true);
+    setTimeout(() => {
+      setCacheRefreshedNotification(false);
+    }, 3000);
+  }
+
   return(
     <>
     <div className="flex flex-col items-start md:flex-row p-5">
-      <WeatherForecastsList forecasts={weatherForecasts} />
+      <WeatherForecastsList
+        forecasts={weatherForecasts}
+        onRefreshCache={handleRefreshCache}
+        showCacheRefreshedNotification={cacheRefreshedNotification}
+      />
       <CreateMeetupForm apiService={apiService}/>
     </div>
     </>

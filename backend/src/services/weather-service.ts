@@ -66,6 +66,8 @@ export default class WeatherService {
 
     fs.writeFileSync(this.cachePath, JSON.stringify(forecasts));
 
+    console.log("Cache refreshed");
+
     return forecasts;
   }
 }

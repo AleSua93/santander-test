@@ -27,6 +27,23 @@ export default class ApiService {
     return data;
   }
 
+
+  public async refreshWeatherCache(jwt?: string): Promise<WeatherForecast[]> {
+    const endpointUri = "/weather/cache";
+
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + jwt,
+      }
+    }
+
+    const response = await fetch(`${this.apiUrl}${endpointUri}`, options);
+    const data = await response.json();
+    
+    return data;
+  }
+
   public async getNumberOfBeerPacks(date: string, numPeople: number, jwt?: string): Promise<number | null> {
     const endpointUrl = new URL(`${this.apiUrl}/beers/forecast`);
     endpointUrl.searchParams.append('date', date);

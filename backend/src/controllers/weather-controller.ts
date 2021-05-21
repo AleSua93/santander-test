@@ -21,9 +21,9 @@ class WeatherController implements Controller {
       `${this.path}/forecasts`,
       expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
       this.getForecasts.bind(this));
-    this.router.get(
+    this.router.post(
       `${this.path}/cache`,
-      // expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
       this.refreshCache.bind(this));
   }
 
@@ -45,9 +45,15 @@ class WeatherController implements Controller {
 
   private async refreshCache(req: Request, res: Response): Promise<void> {
     try {
-      const result = await this.weatherService.refreshCache();
+      const tokenPayload: JWTPayload = req.user as JWTPayload;
+      if (!tokenPayload.isAdmin) {
+        res.sendStatus(401);
+        return;
+      }
+      
+      const result: WeatherForecast[] = await this.weatherService.refreshCache();
 
-      res.status(200).json("test");
+      res.status(200).json(result);
     } catch (err) {
       res.status(400).json(err);
     }
