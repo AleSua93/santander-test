@@ -64,15 +64,28 @@ class MeetupsController implements Controller {
 
   private async getUpcomingMeetups(req: Request, res: Response): Promise<void> {
     try {
+      const tokenPayload: JWTPayload = req.user as JWTPayload;
+
       const meetups = await Meetup.findAll({
         include: {
           model: User,
-          as: "Tests"
-          // attributes: ['id'],
-          // through: {attributes: []},
+          attributes: ['id'],
+          through: {attributes: []},
         }
       });
-      res.status(200).json(meetups);
+      
+      const meetupsWithSubscribed = meetups.map(async (meetup) => {
+        const hasUser = await meetup.hasUser(tokenPayload.userId);
+        return {
+          ...meetup.toJSON(),
+          isUserSubscribed: hasUser
+        }
+      })
+
+      const data = await Promise.all(meetupsWithSubscribed);
+      console.log(data);
+
+      res.status(200).json(data);
     } catch (err) {
       res.status(400).json(err);
     }

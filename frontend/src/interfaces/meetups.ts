@@ -6,12 +6,7 @@ export interface Meetup {
   tempInCelsius?: number;
 }
 
-export interface MeetupWithId {
+export interface ExtendedMeetup extends Meetup {
   id: number;
-  name: string;
-  numPeople: number;
-  date: string;
-  estimatedBeerPacks: number;
-  tempInCelsius?: number;
-  Users: {id: number}[]
+  isUserSubscribed: boolean;
 }

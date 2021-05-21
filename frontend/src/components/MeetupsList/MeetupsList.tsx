@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { MeetupWithId } from "../../interfaces/meetups";
+import { ExtendedMeetup } from "../../interfaces/meetups";
 import ApiService from "../../services/ApiService";
 
 type MeetupsListProps = {
@@ -8,18 +8,22 @@ type MeetupsListProps = {
 }
 
 const MeetupsList = ({ apiService}: MeetupsListProps) =>{
-  const [meetups, setMeetups] = useState<MeetupWithId[] | null>([]);
+  const [meetups, setMeetups] = useState<ExtendedMeetup[] | null>([]);
   const auth = useAuth();
 
   useEffect(() => {
+    refreshMeetups();
+  }, []);
+
+  const refreshMeetups = async() => {
     apiService.getUpcomingMeetups(auth && auth?.jwt).then((meetups) => {
-      console.log(meetups);
       setMeetups(meetups);
     });
-  }, []);
+  }
   
   const handleMeetupSubscription = async (meetupId: number) => {
     await apiService.subscribeToMeetup(meetupId, auth?.jwt);
+    refreshMeetups();
   }
 
   return(
@@ -33,12 +37,15 @@ const MeetupsList = ({ apiService}: MeetupsListProps) =>{
             meetups.map((meetup, idx) => {
               return <li key={`forecast-${idx}`} className="py-3 flex flex-row justify-between">
                 <div className="flex flex-col md:flex-row items-center gap-3">
+                <div><span className="font-bold">Test: </span>{meetup.isUserSubscribed ? "yes" : "no"}</div>
                   <div><span className="font-bold">Name: </span>{meetup.name}</div>
                   <div><span className="font-bold">Date: </span>{meetup.date}</div>
                   <div><span className="font-bold">Temp: </span>{meetup.tempInCelsius ?? "-"} °C</div>
                 </div>
                 <div className="flex flex-col justify-center">
-                  <button onClick={() => handleMeetupSubscription(meetup.id)} className="btn btn-santander">Assist</button>
+                  <button onClick={() => handleMeetupSubscription(meetup.id)} className="btn btn-santander">
+                    {meetup.isUserSubscribed ? "Cancel" : "Assist"}
+                  </button>
                 </div>
               </li>
             })
