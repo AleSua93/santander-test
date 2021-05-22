@@ -26,6 +26,11 @@ const MeetupsList = ({ apiService}: MeetupsListProps) =>{
     refreshMeetups();
   }
 
+  const handleMeetupUnsubscription = async (meetupId: number) => {
+    await apiService.unsubscribeToMeetup(meetupId, auth?.jwt);
+    refreshMeetups();
+  }
+
   return(
     <>
       <div className="self-stretch flex-grow bg-white border-2 border-red-200 rounded shadow-md p-3 my-3 md:mx-3">
@@ -37,15 +42,23 @@ const MeetupsList = ({ apiService}: MeetupsListProps) =>{
             meetups.map((meetup, idx) => {
               return <li key={`forecast-${idx}`} className="py-3 flex flex-row justify-between">
                 <div className="flex flex-col md:flex-row items-center gap-3">
-                <div><span className="font-bold">Test: </span>{meetup.isUserSubscribed ? "yes" : "no"}</div>
                   <div><span className="font-bold">Name: </span>{meetup.name}</div>
                   <div><span className="font-bold">Date: </span>{meetup.date}</div>
                   <div><span className="font-bold">Temp: </span>{meetup.tempInCelsius ?? "-"} °C</div>
+                  {meetup.isUserSubscribed ?
+                    <div className="font-bold text-green-500">Assisting</div> : 
+                    <></>
+                  }
                 </div>
                 <div className="flex flex-col justify-center">
+                {meetup.isUserSubscribed ? 
+                  <button onClick={() => handleMeetupUnsubscription(meetup.id)} className="btn btn-santander">
+                    Cancel
+                  </button> : 
                   <button onClick={() => handleMeetupSubscription(meetup.id)} className="btn btn-santander">
-                    {meetup.isUserSubscribed ? "Cancel" : "Assist"}
+                    Subscribe
                   </button>
+                }
                 </div>
               </li>
             })

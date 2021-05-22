@@ -32,6 +32,10 @@ class MeetupsController implements Controller {
         `${this.path}/:id/subscribe`,
         expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
         this.subscribeToMeetup.bind(this));
+    this.router.delete(
+      `${this.path}/:id/subscribe`,
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.unsubscribeToMeetup.bind(this));
   }
 
   private async createMeetup(req: Request, res: Response): Promise<void> {
@@ -83,7 +87,6 @@ class MeetupsController implements Controller {
       })
 
       const data = await Promise.all(meetupsWithSubscribed);
-      console.log(data);
 
       res.status(200).json(data);
     } catch (err) {
@@ -100,10 +103,32 @@ class MeetupsController implements Controller {
       if (meetup) {
         const hasUser = await meetup.hasUser(tokenPayload.userId);
         if (!hasUser) {
-          console.log("Subscribing user to meetup");
+          console.log(`Subscribing user ${tokenPayload.userId} to meetup`);
           meetup.addUser(tokenPayload.userId);    
         } else {
           console.log("User is already subscribed to meetup");
+        }
+      }
+
+      res.status(200).json(meetup);
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  }
+
+  private async unsubscribeToMeetup(req: Request, res: Response): Promise<void> {
+    try {
+      const tokenPayload: JWTPayload = req.user as JWTPayload;
+
+      const meetup = await Meetup.findByPk(req.params.id);
+
+      if (meetup) {
+        const hasUser = await meetup.hasUser(tokenPayload.userId);
+        if (hasUser) {
+          console.log(`Unsubscribing user ${tokenPayload.userId} from meetup`);
+          meetup.removeUser(tokenPayload.userId);    
+        } else {
+          console.log("User is already unsubscribed from meetup");
         }
       }
 

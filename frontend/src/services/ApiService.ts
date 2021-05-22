@@ -98,6 +98,22 @@ export default class ApiService {
     return data;
   }
 
+  public async unsubscribeToMeetup(meetupId: number, jwt?: string): Promise<Meetup> {
+    const endpointUrl = new URL(`${this.apiUrl}/meetups/${meetupId}/subscribe`);
+
+    const options: RequestInit = {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + jwt,
+      },
+    }
+
+    const response = await fetch(endpointUrl.toString(), options);
+    const data = await response.json();
+
+    return data;
+  }
+
   public async getUpcomingMeetups(jwt?: string): Promise<ExtendedMeetup[]> {
     const endpointUrl = new URL(`${this.apiUrl}/meetups`);
 

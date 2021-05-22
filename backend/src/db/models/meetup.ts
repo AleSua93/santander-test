@@ -28,6 +28,7 @@ export interface MeetupInstance
       getUsers: Sequelize.BelongsToManyGetAssociationsMixin<UserInstance>;
       addUser: Sequelize.BelongsToManyAddAssociationMixin<MeetupInstance, number>;
       hasUser: Sequelize.BelongsToManyHasAssociationMixin<MeetupInstance, number>;
+      removeUser: Sequelize.BelongsToManyRemoveAssociationMixin<MeetupInstance, number>;
     }
 
 const Meetup = sequelize.define<MeetupInstance>(
