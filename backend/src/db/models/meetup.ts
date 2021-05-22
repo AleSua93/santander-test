@@ -20,10 +20,13 @@ export interface MeetupInstance
   MeetupAttributes {
       createdAt?: Date;
       updatedAt?: Date;
-      getUsers: Sequelize.BelongsToManyGetAssociationsMixin<UserInstance>;
-      addUser: Sequelize.BelongsToManyAddAssociationMixin<MeetupInstance, number>;
-      hasUser: Sequelize.BelongsToManyHasAssociationMixin<MeetupInstance, number>;
-      removeUser: Sequelize.BelongsToManyRemoveAssociationMixin<MeetupInstance, number>;
+      getSubscriptions: Sequelize.BelongsToManyGetAssociationsMixin<UserInstance>;
+      addSubscription: Sequelize.BelongsToManyAddAssociationMixin<MeetupInstance, number>;
+      hasSubscription: Sequelize.BelongsToManyHasAssociationMixin<MeetupInstance, number>;
+      removeSubscription: Sequelize.BelongsToManyRemoveAssociationMixin<MeetupInstance, number>;
+      hasCheckin: Sequelize.BelongsToManyHasAssociationMixin<MeetupInstance, number>;
+      removeCheckin: Sequelize.BelongsToManyRemoveAssociationMixin<MeetupInstance, number>;
+      addCheckin: Sequelize.BelongsToManyAddAssociationMixin<MeetupInstance, number>;
     }
 
 const Meetup = sequelize.define<MeetupInstance>(
@@ -59,7 +62,9 @@ const Meetup = sequelize.define<MeetupInstance>(
   }
 );
 
-Meetup.belongsToMany(User, { through: 'UserMeetup' });
-User.belongsToMany(Meetup, { through: 'UserMeetup' });
+Meetup.belongsToMany(User, { through: 'Subscriptions', as: 'subscriptions' });
+Meetup.belongsToMany(User, { through: 'Checkins', as: 'checkins' });
+User.belongsToMany(Meetup, { through: 'Subscriptions' });
+User.belongsToMany(Meetup, { through: 'Checkins' });
 
 export default Meetup;

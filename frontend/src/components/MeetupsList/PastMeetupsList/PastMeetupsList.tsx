@@ -21,6 +21,16 @@ const PastMeetupsList = ({ apiService }: PastMeetupsListProps) =>{
     });
   }
 
+  const handleMeetupCheckIn = async (meetupId: number) => {
+    await apiService.checkInToMeetup(meetupId, auth?.jwt);
+    refreshMeetups();
+  }
+
+  const handleMeetupCheckOut = async (meetupId: number) => {
+    await apiService.checkOutFromMeetup(meetupId, auth?.jwt);
+    refreshMeetups();
+  }
+
   return(
     <>
       <div className="self-stretch flex-grow bg-white border-2 border-red-200 rounded shadow-md p-3">
@@ -35,17 +45,17 @@ const PastMeetupsList = ({ apiService }: PastMeetupsListProps) =>{
                   <div><span className="font-bold">Name: </span>{meetup.name}</div>
                   <div><span className="font-bold">Date: </span>{meetup.date}</div>
                   <div><span className="font-bold">Temp: </span>{meetup.tempInCelsius ?? "-"} °C</div>
-                  {meetup.didUserAssist ?
+                  {meetup.isUserCheckedIn ?
                     <div className="font-bold text-green-500">Checked in!</div> : 
                     <></>
                   }
                 </div>
                 <div className="flex flex-col justify-center">
-                {meetup.didUserAssist ? 
-                  <button onClick={() => console.log(meetup.id)} className="btn btn-santander">
+                {meetup.isUserCheckedIn ? 
+                  <button onClick={() => handleMeetupCheckOut(meetup.id)} className="btn btn-santander">
                     Cancel
                   </button> : 
-                  <button onClick={() => console.log(meetup.id)} className="btn btn-santander">
+                  <button onClick={() => handleMeetupCheckIn(meetup.id)} className="btn btn-santander">
                     Check-in
                   </button>
                 }

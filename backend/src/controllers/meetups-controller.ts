@@ -90,16 +90,17 @@ class MeetupsController implements Controller {
         },
         include: [
           {
-            model: User
+            model: User,
+            as: 'subscriptions'
           }
         ]
       });
       
       const meetupsWithSubscribed = meetups.map(async (meetup) => {
-        const hasUser = await meetup.hasUser(tokenPayload.userId);
+        const isSubscribed = await meetup.hasSubscription(tokenPayload.userId);
         return {
           ...meetup.toJSON(),
-          isUserSubscribed: hasUser
+          isUserSubscribed: isSubscribed
         }
       })
 
@@ -122,16 +123,19 @@ class MeetupsController implements Controller {
             [Op.lt]: new Date()
           } 
         },
-        include: {
-          model: User,
-        }
+        include: [
+          {
+            model: User,
+            as: 'checkins'
+          }
+        ]
       });
       
       const meetupsWithCheckIn = meetups.map(async (meetup) => {
-        const hasUser = await meetup.hasUser(tokenPayload.userId);
+        const isCheckedIn = await meetup.hasCheckin(tokenPayload.userId);
         return {
           ...meetup.toJSON(),
-          isUserCheckedIn: false // TODO fix this
+          isUserCheckedIn: isCheckedIn
         }
       })
 
@@ -150,10 +154,10 @@ class MeetupsController implements Controller {
       const meetup = await Meetup.findByPk(req.params.id);
 
       if (meetup) {
-        const hasUser = await meetup.hasUser(tokenPayload.userId);
-        if (!hasUser) {
+        const isSubscribed = await meetup.hasSubscription(tokenPayload.userId);
+        if (!isSubscribed) {
           console.log(`Subscribing user ${tokenPayload.userId} to meetup`);
-          meetup.addUser(tokenPayload.userId);    
+          meetup.addSubscription(tokenPayload.userId);    
         } else {
           console.log("User is already subscribed to meetup");
         }
@@ -172,10 +176,10 @@ class MeetupsController implements Controller {
       const meetup = await Meetup.findByPk(req.params.id);
 
       if (meetup) {
-        const hasUser = await meetup.hasUser(tokenPayload.userId);
-        if (hasUser) {
+        const isSubscribed = await meetup.hasSubscription(tokenPayload.userId);
+        if (isSubscribed) {
           console.log(`Unsubscribing user ${tokenPayload.userId} from meetup`);
-          meetup.removeUser(tokenPayload.userId);    
+          meetup.removeSubscription(tokenPayload.userId);    
         } else {
           console.log("User is already unsubscribed from meetup");
         }
@@ -188,11 +192,47 @@ class MeetupsController implements Controller {
   }
 
   private async checkInToMeetup(req: Request, res: Response): Promise<void> {
-    // TODO
+    try {
+      const tokenPayload: JWTPayload = req.user as JWTPayload;
+
+      const meetup = await Meetup.findByPk(req.params.id);
+
+      if (meetup) {
+        const isCheckedIn = await meetup.hasCheckin(tokenPayload.userId);
+        if (!isCheckedIn) {
+          console.log(`Checking in user ${tokenPayload.userId} to meetup`);
+          meetup.addCheckin(tokenPayload.userId);    
+        } else {
+          console.log("User is already checked in");
+        }
+      }
+
+      res.status(201).json(meetup);
+    } catch (err) {
+      res.status(400).json(err);
+    }
   }
 
   private async checkOutFromMeetup(req: Request, res: Response): Promise<void> {
-    // TODO
+    try {
+      const tokenPayload: JWTPayload = req.user as JWTPayload;
+
+      const meetup = await Meetup.findByPk(req.params.id);
+
+      if (meetup) {
+        const isCheckedIn = await meetup.hasCheckin(tokenPayload.userId);
+        if (isCheckedIn) {
+          console.log(`Checking out user ${tokenPayload.userId} from meetup`);
+          meetup.removeCheckin(tokenPayload.userId);    
+        } else {
+          console.log("User is already checked out from meetup");
+        }
+      }
+
+      res.status(201).json(meetup);
+    } catch (err) {
+      res.status(400).json(err);
+    }
   }
 }
 

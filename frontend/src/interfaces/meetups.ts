@@ -15,5 +15,5 @@ export interface UpcomingMeetup extends ExtendedMeetup {
 }
 
 export interface PastMeetup extends ExtendedMeetup {
-  didUserAssist: boolean;
+  isUserCheckedIn: boolean;
 }
