@@ -43,13 +43,16 @@ const Navbar =() =>{
               : <></> }
             </div>
             {auth && auth.jwt ?
-              <div className="-mr-2 flex md:hidden">
+              <div className="-mr-2 flex">
+                <div className="text-gray-700 m-2 invisible md:visible">
+                  Hello, {auth.userInfo && auth.userInfo.username}
+                </div>
                 <button 
                   onClick={() => setIsOpen(!isOpen)}
                   type="button"
                   className="bg-white inline-flex items-center
                   justify-center p-2 rounded-md
-                  text-santander-red"
+                  text-santander-red md:hidden"
                   aria-controls="mobile-menu"
                   aria-expanded="false"
                 >
@@ -74,8 +77,16 @@ const Navbar =() =>{
         >
           <div className="md:hidden" id="mobile-menu">
             <div ref={mobileMenuRef} className="bg-santander-red px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <Link to="/" className="text-white hover:bg-red-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</Link>
-              <Link to="/admin" className="text-white hover:bg-red-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Admin</Link>
+              <Link
+                onClick={() => {setIsOpen(!isOpen)}}
+                to="/"
+                className="text-white hover:bg-red-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >Home</Link>
+              <Link
+                onClick={() => {setIsOpen(!isOpen)}}
+                to="/admin"
+                className="text-white hover:bg-red-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >Admin</Link>
             </div>
           </div>
         </Transition>

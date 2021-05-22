@@ -17,8 +17,8 @@ const MeetupsList = ({ apiService}: MeetupsListProps) =>{
 
   return(
     <>
-      <div className="flex flex-col flex-grow">
-        <nav className="tabs flex flex-col sm:flex-row">
+      <div className="flex flex-col flex-grow self-stretch">
+        <nav className="tabs flex flex-row">
           <button
             className={`tab ${activeTab === MeetupListTabs.UPCOMING ? "tab-active" : ""}`}
             onClick={() => {setActiveTab(MeetupListTabs.UPCOMING)}}

@@ -41,7 +41,7 @@ const UpcomingMeetupsList = ({ apiService }: UpcomingMeetupsListProps) =>{
         {meetups ?
             meetups.map((meetup, idx) => {
               return <li key={`forecast-${idx}`} className="py-3 flex flex-row justify-between">
-                <div className="flex flex-col md:flex-row items-center gap-3">
+                <div className="flex flex-col md:flex-row sm:items-center sm:gap-3">
                   <div><span className="font-bold">Name: </span>{meetup.name}</div>
                   <div><span className="font-bold">Date: </span>{meetup.date}</div>
                   <div><span className="font-bold">Temp: </span>{meetup.tempInCelsius ?? "-"} °C</div>
