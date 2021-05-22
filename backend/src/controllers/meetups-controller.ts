@@ -21,13 +21,13 @@ class MeetupsController implements Controller {
   }
 
   private initializeRoutes() {
+    this.router.get(`${this.path}`,
+      // expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.getUpcomingMeetups.bind(this));
     this.router.post(
       `${this.path}`,
       expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
       this.createMeetup.bind(this));
-    this.router.get(`${this.path}`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.getUpcomingMeetups.bind(this));
     this.router.post(
         `${this.path}/:id/subscribe`,
         expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
