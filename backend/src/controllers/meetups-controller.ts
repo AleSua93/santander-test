@@ -185,7 +185,7 @@ class MeetupsController implements Controller {
         }
       }
 
-      res.status(201).json(meetup);
+      res.status(200).json(meetup);
     } catch (err) {
       res.status(400).json(err);
     }
@@ -229,7 +229,7 @@ class MeetupsController implements Controller {
         }
       }
 
-      res.status(201).json(meetup);
+      res.status(200).json(meetup);
     } catch (err) {
       res.status(400).json(err);
     }
