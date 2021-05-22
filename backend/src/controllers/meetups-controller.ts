@@ -71,6 +71,11 @@ class MeetupsController implements Controller {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
 
       const meetups = await Meetup.findAll({
+        where: {
+          date: {
+            $gt: new Date()
+          } 
+        },
         include: {
           model: User,
           attributes: ['id'],
