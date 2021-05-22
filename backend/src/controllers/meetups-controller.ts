@@ -22,7 +22,7 @@ class MeetupsController implements Controller {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`,
-      // expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
       this.getUpcomingMeetups.bind(this));
     this.router.post(
       `${this.path}`,
@@ -59,7 +59,7 @@ class MeetupsController implements Controller {
         ...meetupAttributes
       });
 
-      res.status(200).json(meetup);
+      res.status(201).json(meetup);
     } catch (err) {
       console.log(err);
       res.status(400).json(err);
@@ -110,7 +110,7 @@ class MeetupsController implements Controller {
         }
       }
 
-      res.status(200).json(meetup);
+      res.status(201).json(meetup);
     } catch (err) {
       res.status(400).json(err);
     }
@@ -132,7 +132,7 @@ class MeetupsController implements Controller {
         }
       }
 
-      res.status(200).json(meetup);
+      res.status(201).json(meetup);
     } catch (err) {
       res.status(400).json(err);
     }

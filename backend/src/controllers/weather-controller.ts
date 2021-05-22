@@ -53,7 +53,7 @@ class WeatherController implements Controller {
       
       const result: WeatherForecast[] = await this.weatherService.refreshCache();
 
-      res.status(200).json(result);
+      res.status(201).json(result);
     } catch (err) {
       res.status(400).json(err);
     }
