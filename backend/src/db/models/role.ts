@@ -7,11 +7,6 @@ export interface RoleAttributes {
   name: string;
 };
 
-/*
-  We have to declare the AuthorCreationAttributes to
-  tell Sequelize and TypeScript that the property id,
-  in this case, is optional to be passed at creation time
-*/
 interface RoleCreationAttributes
   extends Optional<RoleAttributes, 'id'> {}
 

@@ -106,7 +106,7 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
             <input
               type="date"
               name="date"
-              min={currentDate.toISOString().split("T")[0]}
+              // min={currentDate.toISOString().split("T")[0]}
               value={formData.date}
               onChange={handleDateChange}
               className="p-1 shadow border border-red-700 rounded focus:outline-none focus:shadow-outline" 

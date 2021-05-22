@@ -7,6 +7,7 @@ import { JWTPayload } from "../interfaces/auth";
 import Controller from "../interfaces/controller";
 import BeersService from "../services/beers-service";
 import WeatherService from "../services/weather-service";
+const { Op } = require("sequelize");
 
 class MeetupsController implements Controller {
   public path = '/meetups';
@@ -21,21 +22,32 @@ class MeetupsController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`,
+    this.router.get(`${this.path}/upcoming`,
       expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
       this.getUpcomingMeetups.bind(this));
+    this.router.get(`${this.path}/past`,
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.getPastMeetups.bind(this));
     this.router.post(
       `${this.path}`,
       expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
       this.createMeetup.bind(this));
     this.router.post(
-        `${this.path}/:id/subscribe`,
+        `${this.path}/upcoming/:id/subscribe`,
         expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
         this.subscribeToMeetup.bind(this));
     this.router.delete(
-      `${this.path}/:id/subscribe`,
+      `${this.path}/upcoming/:id/subscribe`,
       expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.unsubscribeToMeetup.bind(this));
+      this.unsubscribeFromMeetup.bind(this));
+    this.router.post(
+        `${this.path}/past/:id/check-in`,
+        expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+        this.checkInToMeetup.bind(this));
+    this.router.delete(
+      `${this.path}/past/:id/check-in`,
+      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
+      this.checkOutFromMeetup.bind(this));
   }
 
   private async createMeetup(req: Request, res: Response): Promise<void> {
@@ -73,14 +85,14 @@ class MeetupsController implements Controller {
       const meetups = await Meetup.findAll({
         where: {
           date: {
-            $gt: new Date()
+            [Op.gte]: new Date()
           } 
         },
-        include: {
-          model: User,
-          attributes: ['id'],
-          through: {attributes: []},
-        }
+        include: [
+          {
+            model: User
+          }
+        ]
       });
       
       const meetupsWithSubscribed = meetups.map(async (meetup) => {
@@ -92,6 +104,38 @@ class MeetupsController implements Controller {
       })
 
       const data = await Promise.all(meetupsWithSubscribed);
+
+      res.status(200).json(data);
+    } catch (err) {
+      console.log(err);
+      res.status(400).json(err);
+    }
+  }
+
+  private async getPastMeetups(req: Request, res: Response): Promise<void> {
+    try {
+      const tokenPayload: JWTPayload = req.user as JWTPayload;
+
+      const meetups = await Meetup.findAll({
+        where: {
+          date: {
+            [Op.lt]: new Date()
+          } 
+        },
+        include: {
+          model: User,
+        }
+      });
+      
+      const meetupsWithCheckIn = meetups.map(async (meetup) => {
+        const hasUser = await meetup.hasUser(tokenPayload.userId);
+        return {
+          ...meetup.toJSON(),
+          isUserCheckedIn: false // TODO fix this
+        }
+      })
+
+      const data = await Promise.all(meetupsWithCheckIn);
 
       res.status(200).json(data);
     } catch (err) {
@@ -121,7 +165,7 @@ class MeetupsController implements Controller {
     }
   }
 
-  private async unsubscribeToMeetup(req: Request, res: Response): Promise<void> {
+  private async unsubscribeFromMeetup(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
 
@@ -141,6 +185,14 @@ class MeetupsController implements Controller {
     } catch (err) {
       res.status(400).json(err);
     }
+  }
+
+  private async checkInToMeetup(req: Request, res: Response): Promise<void> {
+    // TODO
+  }
+
+  private async checkOutFromMeetup(req: Request, res: Response): Promise<void> {
+    // TODO
   }
 }
 

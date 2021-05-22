@@ -12,11 +12,6 @@ export interface MeetupAttributes {
   tempInCelsius?: number;
 };
 
-/*
-  We have to declare the AuthorCreationAttributes to
-  tell Sequelize and TypeScript that the property id,
-  in this case, is optional to be passed at creation time
-*/
 interface MeetupCreationAttributes
   extends Optional<MeetupAttributes, 'id'> {}
 

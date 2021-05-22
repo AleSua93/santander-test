@@ -1,5 +1,5 @@
 import { BeersForecast, WeatherForecast } from "../interfaces/forecasts";
-import { Meetup, ExtendedMeetup } from "../interfaces/meetups";
+import { Meetup, PastMeetup, UpcomingMeetup } from "../interfaces/meetups";
 
 export default class ApiService {
   private apiUrl: string | undefined;
@@ -83,7 +83,7 @@ export default class ApiService {
   }
 
   public async subscribeToMeetup(meetupId: number, jwt?: string): Promise<Meetup> {
-    const endpointUrl = new URL(`${this.apiUrl}/meetups/${meetupId}/subscribe`);
+    const endpointUrl = new URL(`${this.apiUrl}/meetups/upcoming/${meetupId}/subscribe`);
 
     const options: RequestInit = {
       method: "POST",
@@ -98,8 +98,8 @@ export default class ApiService {
     return data;
   }
 
-  public async unsubscribeToMeetup(meetupId: number, jwt?: string): Promise<Meetup> {
-    const endpointUrl = new URL(`${this.apiUrl}/meetups/${meetupId}/subscribe`);
+  public async unsubscribeFromMeetup(meetupId: number, jwt?: string): Promise<Meetup> {
+    const endpointUrl = new URL(`${this.apiUrl}/meetups/upcoming/${meetupId}/subscribe`);
 
     const options: RequestInit = {
       method: "DELETE",
@@ -114,8 +114,8 @@ export default class ApiService {
     return data;
   }
 
-  public async getUpcomingMeetups(jwt?: string): Promise<ExtendedMeetup[]> {
-    const endpointUrl = new URL(`${this.apiUrl}/meetups`);
+  public async getUpcomingMeetups(jwt?: string): Promise<UpcomingMeetup[]> {
+    const endpointUrl = new URL(`${this.apiUrl}/meetups/upcoming`);
 
     const options: RequestInit = {
       method: "GET",
@@ -125,7 +125,23 @@ export default class ApiService {
     }
 
     const response = await fetch(endpointUrl.toString(), options);
-    const data: ExtendedMeetup[] = await response.json();
+    const data: UpcomingMeetup[] = await response.json();
+
+    return data;
+  }
+
+  public async getPastMeetups(jwt?: string): Promise<PastMeetup[]> {
+    const endpointUrl = new URL(`${this.apiUrl}/meetups/past`);
+
+    const options: RequestInit = {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + jwt,
+      },
+    }
+
+    const response = await fetch(endpointUrl.toString(), options);
+    const data: PastMeetup[] = await response.json();
 
     return data;
   }
