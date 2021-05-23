@@ -17,9 +17,9 @@ class App {
     this.app = express();
     this.port = port;
 
-    this.initializeMiddlewares();
-    this.initializeControllers(controllers);
     this.initializeSwagger();
+    this.initializeControllers(controllers);
+    this.initializeMiddlewares();
   }
 
   private initializeMiddlewares() {
@@ -27,11 +27,11 @@ class App {
     this.app.use(cors());
     this.app.use(cookieParser())
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.json());
     this.app.use(expressJwt({
       secret: config.jwtSigningKey,
       algorithms: ['HS256']
-    }).unless({path: ['/api/auth/login', '/api/auth/refresh']}));
-    this.app.use(express.json());
+    }).unless({path: ['/api/auth/login', 'api/auth/refresh', 'api/docs']}));
   }
 
   private initializeControllers(controllers: Controller[]) {
@@ -70,7 +70,7 @@ class App {
       ]
     }
     const swaggerDocs = swaggerJsDoc(swaggerOptions);
-    this.app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+    this.app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
   }
 
   public listen(): Server {
