@@ -22,32 +22,13 @@ class MeetupsController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/upcoming`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.getUpcomingMeetups.bind(this));
-    this.router.get(`${this.path}/past`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.getPastMeetups.bind(this));
-    this.router.post(
-      `${this.path}`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.createMeetup.bind(this));
-    this.router.post(
-        `${this.path}/upcoming/:id/subscribe`,
-        expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-        this.subscribeToMeetup.bind(this));
-    this.router.delete(
-      `${this.path}/upcoming/:id/subscribe`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.unsubscribeFromMeetup.bind(this));
-    this.router.post(
-        `${this.path}/past/:id/check-in`,
-        expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-        this.checkInToMeetup.bind(this));
-    this.router.delete(
-      `${this.path}/past/:id/check-in`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.checkOutFromMeetup.bind(this));
+    this.router.get(`${this.path}/upcoming`, this.getUpcomingMeetups.bind(this));
+    this.router.get(`${this.path}/past`, this.getPastMeetups.bind(this));
+    this.router.post(`${this.path}`, this.createMeetup.bind(this));
+    this.router.post(`${this.path}/upcoming/:id/subscribe`, this.subscribeToMeetup.bind(this));
+    this.router.delete(`${this.path}/upcoming/:id/subscribe`, this.unsubscribeFromMeetup.bind(this));
+    this.router.post(`${this.path}/past/:id/check-in`, this.checkInToMeetup.bind(this));
+    this.router.delete(`${this.path}/past/:id/check-in`, this.checkOutFromMeetup.bind(this));
   }
 
     /**

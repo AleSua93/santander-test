@@ -19,10 +19,7 @@ class BeersController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}/forecast`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.getForecast.bind(this));
+    this.router.get(`${this.path}/forecast`, this.getForecast.bind(this));
   }
 
   /**

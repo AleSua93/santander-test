@@ -17,14 +17,8 @@ class WeatherController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}/forecasts`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.getForecasts.bind(this));
-    this.router.post(
-      `${this.path}/cache`,
-      expressJwt({ secret: config.jwtSigningKey, algorithms: ['HS256'] }),
-      this.refreshCache.bind(this));
+    this.router.get(`${this.path}/forecasts`, this.getForecasts.bind(this));
+    this.router.post(`${this.path}/cache`, this.refreshCache.bind(this));
   }
 
   /**

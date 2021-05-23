@@ -46,7 +46,7 @@ class AuthController implements Controller {
    *                type: string
    *    responses:
    *      '200':
-   *        description: An access token with user data as payload, and an HttpOnly cookie with a refresh token
+   *        description: An access token with user data as payload, and an HttpOnly cookie with a 7-day refresh token
    *        Set-Cookie:
    *          schema: 
    *            type: string
@@ -88,9 +88,13 @@ class AuthController implements Controller {
 
       const match = await bcrypt.compare(loginData.password, user?.password);
       if (match) {
+        // Destroy refresh token if exists
+        const existingToken = await user.getRefreshToken();
+        if (existingToken) existingToken.destroy();
+        
         // Sign tokens
         const { accessToken, refreshToken, refreshExpirationDate } = 
-          await AuthService.getTokens(user);
+          await AuthService.createTokens(user);
 
         // Create refresh token in db
         await user.createRefreshToken({
@@ -180,7 +184,7 @@ class AuthController implements Controller {
 
       // Sign new tokens
       const { accessToken, refreshToken, refreshExpirationDate } = 
-      await AuthService.getTokens(user);
+      await AuthService.createTokens(user);
 
       // Create refresh token in db
       await user.createRefreshToken({

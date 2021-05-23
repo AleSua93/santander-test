@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-import { PastMeetup, UpcomingMeetup } from "../../../interfaces/meetups";
+import { PastMeetup } from "../../../interfaces/meetups";
 import ApiService from "../../../services/ApiService";
 
 type PastMeetupsListProps = {

@@ -5,7 +5,9 @@ import { Server } from "http";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
 import path from "path";
+import expressJwt from "express-jwt";
 import cookieParser from "cookie-parser";
+import config from "./configuration/config";
 
 class App {
   public app: express.Application;
@@ -25,6 +27,10 @@ class App {
     this.app.use(cors());
     this.app.use(cookieParser())
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(expressJwt({
+      secret: config.jwtSigningKey,
+      algorithms: ['HS256']
+    }).unless({path: ['/api/auth/login', '/api/auth/refresh']}));
     this.app.use(express.json());
   }
 

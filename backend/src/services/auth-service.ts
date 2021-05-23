@@ -7,7 +7,7 @@ import config from "../configuration/config";
 export default class AuthService {
   constructor() {}
 
-  public static async getTokens(user: UserInstance): Promise<TokenPair> {
+  public static async createTokens(user: UserInstance): Promise<TokenPair> {
     // Create payload
     const roles = await user.getRoles();
     const roleNames = roles.map((role: RoleInstance) => {
