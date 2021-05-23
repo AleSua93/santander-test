@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import Controller from "./interfaces/controller";
 import { Server } from "http";
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
+import path from "path";
 
 class App {
   public app: express.Application;
@@ -13,6 +16,7 @@ class App {
 
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
+    this.initializeSwagger();
   }
 
   private initializeMiddlewares() {
@@ -25,6 +29,39 @@ class App {
     controllers.forEach((controller) => {
       this.app.use('/api', controller.router);
     });
+  }
+
+  private initializeSwagger() {
+    const swaggerOptions = {
+      swaggerDefinition: {
+        openapi: '3.0.0',
+        info: {
+          title: "Meetups Santander Challenge API",
+          description: "API docs for the Meetups challenge",
+          version: "1.0.0"
+        },
+        contact: {
+          name: "Alejandro Suárez"
+        },
+        servers: [
+          {
+           "description": "Local env",
+           "url": "http://localhost:5000/api"
+          }
+        ],
+        security: [
+          {
+            bearerAuth: []
+          }
+        ]
+      },
+      apis: [
+        path.resolve(`${__dirname}/controllers/*ts`),
+        path.resolve(`${__dirname}/docs/definitions.yaml`)
+      ]
+    }
+    const swaggerDocs = swaggerJsDoc(swaggerOptions);
+    this.app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
   }
 
   public listen(): Server {

@@ -10,15 +10,14 @@ import WeatherController from "./controllers/weather-controller";
 import { sequelize } from "./db/models/index";
 
 const app: App = new App(
-    [
-      new WeatherController(),
-      new BeersController(),
-      new MeetupsController(),
-      new AuthController
-    ],
-    config.port
-  )
-
+  [
+    new WeatherController(),
+    new BeersController(),
+    new MeetupsController(),
+    new AuthController
+  ],
+  config.port
+)
 
 app.listen();
 

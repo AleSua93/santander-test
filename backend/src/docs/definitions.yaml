@@ -1,0 +1,58 @@
+# servers:
+#   - url: https://localhost:5000/api
+#     description: Default local server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+  schemas:
+    Meetup:
+      type: object
+      required:
+        - id
+          name
+          date
+          numPeople
+      properties:
+        id:
+          type: integer
+          example: 15
+        name:
+          type: string
+          example: My meetup
+        date:
+          type: string
+          example: "2021-05-15"
+        numPeople:
+          type: integer
+          example: 10
+        estimatedBeerPacks:
+          type: integer
+          example: 2
+        tempInCelsius:
+          type: number
+          example: 14.5
+    WeatherForecast:
+      type: object
+      required:
+        - date
+          temp
+      properties:
+        date:
+          type: string
+          example: "2021-05-13"
+        temp:
+          type: number
+          description: Temperature in °C
+          example: 19.4
+    BeersForecast:
+      allOf:
+        - $ref: '#/components/schemas/WeatherForecast'
+      required:
+        - beerPacks
+      properties:
+        beerPacks:
+          type: integer
+          example: 3

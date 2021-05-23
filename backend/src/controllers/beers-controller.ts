@@ -25,6 +25,42 @@ class BeersController implements Controller {
       this.getForecast.bind(this));
   }
 
+  /**
+   * @swagger
+   * /beers/forecast:
+   *   get:
+   *     summary: Returns a forecast with the number of 6 packs estimated
+   *     tags:
+   *       - Beers
+   *     security: 
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: query
+   *         name: date
+   *         description: Planned date for meetup
+   *         schema:
+   *           type: string
+   *         required: true
+   *       - in: query
+   *         name: people
+   *         description: Number of estimated attendees
+   *         schema:
+   *           type: integer
+   *         required: true
+   *     responses:
+   *       '200':
+   *         description: Forecast for weather and estimated beer packs
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/BeersForecast'
+   *       '400':
+   *         description: Bad request
+   *       '401':
+   *         description: "Unauthorized"
+   *       '404':
+   *         description: No forecast available for this date
+   *  */  
   private async getForecast(req: Request, res: Response): Promise<void> {
     try {
       const date = req.query.date as string;

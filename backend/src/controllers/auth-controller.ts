@@ -3,7 +3,6 @@ import User from "../db/models/user";
 import Controller from "../interfaces/controller";
 import { LoginData } from "../interfaces/login-data";
 import bcrypt from "bcrypt";
-import expressJwt from "express-jwt";
 import jwt from "jsonwebtoken";
 import config from "../configuration/config";
 import { JWTPayload } from "../interfaces/auth";
@@ -17,10 +16,43 @@ class AuthController implements Controller {
     this.initializeRoutes();
   }
 
-  private initializeRoutes() {
+  private initializeRoutes() { 
     this.router.post(`${this.path}/login`, this.login.bind(this));
   }
 
+  /**
+   * @swagger
+   * /auth/login:
+   *  post:
+   *    summary: Authenticates the user against the DB credentials
+   *    tags:
+   *      - Auth
+   *    security: []
+   *    requestBody:
+   *      required: true
+   *      content:
+   *        application/json:
+   *          schema:
+   *            type: object
+   *            required:
+   *              - email
+   *              - password
+   *            properties:
+   *              email:
+   *                type: string
+   *              password:
+   *                type: string
+   *    responses:
+   *      '200':
+   *        description: A JWT with user data as payload
+   *        content:
+   *          text/plain:
+   *            schema:
+   *              type: string
+   *              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTYyMTcxMjc2OCwiZXhwIjoxNjIxNzEzNjY4fQ.YkncdxSnVmsRMsd1pq7S7dZkRjmYTuG2u1w9hTZd4ec
+   *      '400':
+   *        description: Invalid credentials
+   *  */  
   private async login(req: Request, res: Response): Promise<void> {
     try {
       const loginData: LoginData = {

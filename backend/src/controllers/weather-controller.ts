@@ -27,6 +27,27 @@ class WeatherController implements Controller {
       this.refreshCache.bind(this));
   }
 
+  /**
+  * @swagger
+  * /weather/forecasts:
+  *   get:
+  *     summary: Retrieves a list of weather forecasts
+  *     tags:
+  *       - Weather
+  *     responses:
+  *       '200':
+  *         description: "Forecasts returned"
+  *         content:
+  *           application/json:
+  *             schema:
+  *               type: array
+  *               items:
+  *                 $ref: '#/components/schemas/WeatherForecast'
+  *       '400':
+  *         description: "Bad request"
+  *       '401':
+  *         description: "Unauthorized"
+  */
   private async getForecasts(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
@@ -43,6 +64,27 @@ class WeatherController implements Controller {
     }
   }
 
+  /**
+  * @swagger
+  * /weather/cache:
+  *   post:
+  *     summary: Refreshes weather forecasts cache
+  *     tags:
+  *       - Weather
+  *     responses:
+  *       '201':
+  *         description: "Cache refreshed"
+  *         content:
+  *           application/json:
+  *             schema:
+  *               type: array
+  *               items:
+  *                 $ref: '#/components/schemas/WeatherForecast'
+  *       '400':
+  *         description: "Bad request"
+  *       '401':
+  *         description: "Unauthorized"
+  */
   private async refreshCache(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;

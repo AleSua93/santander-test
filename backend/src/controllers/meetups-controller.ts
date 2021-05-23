@@ -50,6 +50,25 @@ class MeetupsController implements Controller {
       this.checkOutFromMeetup.bind(this));
   }
 
+    /**
+   * @swagger
+   * /meetups:
+   *   post:
+   *     tags:
+   *       - Meetups
+   *     summary: Creates new meetup
+   *     responses:
+   *       '201':
+   *         description: "Meetup created"
+   *         content:
+   *           application/json:
+   *             schema:  
+   *               $ref: '#/components/schemas/Meetup'
+   *       '400':
+   *         description: "Bad request"
+   *       '401':
+   *         description: "Unauthorized"
+   *  */  
   private async createMeetup(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
@@ -78,6 +97,27 @@ class MeetupsController implements Controller {
     }
   }
 
+  /**
+  * @swagger
+  * /meetups/upcoming:
+  *   get:
+  *     summary: Returns upcoming meetups
+  *     tags:
+  *       - Meetups
+  *     responses:
+  *       '200':
+  *         description: "List of upcoming meetups returned"
+  *         content:
+  *           application/json:
+  *             schema:
+  *               type: array
+  *               items:
+  *                 $ref: '#/components/schemas/Meetup'
+  *       '400':
+  *         description: "Bad request"
+  *       '401':
+  *         description: "Unauthorized"
+  */
   private async getUpcomingMeetups(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
@@ -113,6 +153,27 @@ class MeetupsController implements Controller {
     }
   }
 
+  /**
+  * @swagger
+  * /meetups/past:
+  *   get:
+  *     summary: Returns past meetups
+  *     tags:
+  *       - Meetups
+  *     responses:
+  *       '200':
+  *         description: "List of upcoming meetups returned"
+  *         content:
+  *           application/json:
+  *             schema:
+  *               type: array
+  *               items:
+  *                 $ref: '#/components/schemas/Meetup'
+  *       '400':
+  *         description: "Bad request"
+  *       '401':
+  *         description: "Unauthorized"
+  */
   private async getPastMeetups(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
@@ -147,6 +208,25 @@ class MeetupsController implements Controller {
     }
   }
 
+  /**
+   * @swagger
+   * /meetups/upcoming/:id/subscribe:
+   *   post:
+   *     summary: Subscribes to specified meetup
+   *     tags:
+   *       - Meetups
+   *     responses:
+   *       '201':
+   *         description: "Subscription registered"
+   *         content:
+   *           application/json:
+   *             schema:  
+   *               $ref: '#/components/schemas/Meetup'
+   *       '400':
+   *         description: "Bad request"
+   *       '401':
+   *         description: "Unauthorized"
+   */
   private async subscribeToMeetup(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
@@ -169,6 +249,25 @@ class MeetupsController implements Controller {
     }
   }
 
+  /**
+   * @swagger
+   * /meetups/upcoming/:id/subscribe:
+   * delete:
+   *   summary: Unsubscribes from specified meetup
+   *   tags:
+   *     - Meetups
+   *   responses:
+   *     '200':
+   *       description: "Unsubscribe successful"
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Meetup'
+   *     '400':
+   *       description: "Bad request"
+   *     '401':
+   *       description: "Unauthorized"
+   */
   private async unsubscribeFromMeetup(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
@@ -191,6 +290,25 @@ class MeetupsController implements Controller {
     }
   }
 
+  /**
+  * @swagger
+  * /meetups/past/:id/check-in:
+  *   post:
+  *     summary: Checks in to specified meetup
+  *     tags:
+  *       - Meetups
+  *     responses:
+  *       '201':
+  *         description: "Check in successful"
+  *         content:
+  *           application/json:
+  *             schema:
+  *               $ref: '#/components/schemas/Meetup'
+  *       '400':
+  *         description: "Bad request"
+  *       '401':
+  *         description: "Unauthorized"
+  */
   private async checkInToMeetup(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
@@ -213,6 +331,25 @@ class MeetupsController implements Controller {
     }
   }
 
+  /**
+  * @swagger
+  * /meetups/past/:id/check-in:
+  *  delete:
+  *    summary: Checks out from specified meetup
+  *    tags:
+  *      - Meetups
+  *    responses:
+  *      '200':
+  *        description: "Check out successful"
+  *        content:
+  *          application/json:
+  *            schema:
+  *              $ref: '#/components/schemas/Meetup'
+  *      '400':
+  *        description: "Bad request"
+  *      '401':
+  *        description: "Unauthorized"
+  */
   private async checkOutFromMeetup(req: Request, res: Response): Promise<void> {
     try {
       const tokenPayload: JWTPayload = req.user as JWTPayload;
