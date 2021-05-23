@@ -20,6 +20,7 @@ class App {
   }
 
   private initializeMiddlewares() {
+    // We're not configuring cors now, but a real app should have it
     this.app.use(cors());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
