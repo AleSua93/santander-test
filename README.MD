@@ -34,3 +34,6 @@ Todo esto debe realizarse dentro del directorio `backend/`.
 - Correr el comando `yarn start` en consola para correr el proyecto localmente. Por defecto, el server local de backend esta en `http://localhost:5000`.
 - Para correr las migraciones de la base de datos utilizar el comando `npx sequelize db:migrate`.
 - Para seedear la db utilizar el comando `npx sequelize db:seed:all`.
+
+
+![](./misc/santander-db-schema.png)
