@@ -20,7 +20,7 @@ function App() {
       <Router>
       <Layout>
       <Switch>
-      {auth && auth.jwt ?
+      {auth && auth.accessToken ?
       <>
         <Route exact path="/">
           <Home apiService={apiService}/>

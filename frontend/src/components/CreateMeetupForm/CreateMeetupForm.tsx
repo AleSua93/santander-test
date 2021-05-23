@@ -23,7 +23,7 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
   const handleSubmit = async (ev: SyntheticEvent) => {
     ev.preventDefault();
 
-    const meetup: Meetup = await apiService.createMeetup(formData, auth && auth.jwt);
+    const meetup: Meetup = await apiService.createMeetup(formData, auth && auth.accessToken);
     if (meetup) {
       showCreatedNotification();
     }
@@ -66,7 +66,7 @@ const CreateMeetupForm = ({ apiService }: CreateMeetupFormProps) =>{
     const estimatedBeerPacks = await apiService.getNumberOfBeerPacks(
       formData.date,
       formData.numPeople,
-      auth && auth.jwt);
+      auth && auth.accessToken);
     setEstimatedBeerPacks(estimatedBeerPacks);
   }
 

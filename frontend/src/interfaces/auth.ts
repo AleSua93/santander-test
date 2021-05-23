@@ -8,3 +8,7 @@ export interface UserInfo {
 export interface JWTPayload extends UserInfo {
   iat: number;
 }
+
+export interface TokenResponse {
+  accessToken: string;
+}

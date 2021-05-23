@@ -6,3 +6,7 @@ export interface JWTPayload {
   email: string;
   isAdmin: boolean;
 }
+
+export interface TokenResponse {
+  accessToken: string;
+}

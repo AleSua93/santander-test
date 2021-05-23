@@ -7,24 +7,24 @@ import { UserInfo } from "../interfaces/auth";
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-  const [jwt, setJwt] = useState<string | undefined>();
+  const [accessToken, setAccessToken] = useState<string | undefined>();
   const [userInfo, setUserInfo] = useState<UserInfo | undefined>();
 
   const login = async (loginData: LoginData) => {
-    const jwt = await AuthService.login(loginData);
-    const userInfo: UserInfo = jwt_decode(jwt);
+    const tokenResponse = await AuthService.login(loginData);
+    const userInfo: UserInfo = jwt_decode(tokenResponse.accessToken);
 
-    setJwt(jwt);
+    setAccessToken(tokenResponse.accessToken);
     setUserInfo(userInfo);
   }
 
   const logout = async () => {
-    setJwt(undefined);
+    setAccessToken(undefined);
     setUserInfo(undefined);
   }
 
   return {
-    jwt,
+    accessToken,
     userInfo,
     login,
     logout
