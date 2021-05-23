@@ -16,18 +16,18 @@ const UpcomingMeetupsList = ({ apiService }: UpcomingMeetupsListProps) =>{
   }, []);
 
   const refreshMeetups = async() => {
-    apiService.getUpcomingMeetups(auth && auth?.jwt).then((meetups) => {
+    apiService.getUpcomingMeetups(auth && auth?.accessToken).then((meetups) => {
       setMeetups(meetups);
     });
   }
 
   const handleMeetupSubscription = async (meetupId: number) => {
-    await apiService.subscribeToMeetup(meetupId, auth?.jwt);
+    await apiService.subscribeToMeetup(meetupId, auth?.accessToken);
     refreshMeetups();
   }
 
   const handleMeetupUnsubscription = async (meetupId: number) => {
-    await apiService.unsubscribeFromMeetup(meetupId, auth?.jwt);
+    await apiService.unsubscribeFromMeetup(meetupId, auth?.accessToken);
     refreshMeetups();
   }
 

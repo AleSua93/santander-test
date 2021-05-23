@@ -3,7 +3,7 @@ import { LoginData } from "../interfaces/login-data";
 import { UserInfo } from "../interfaces/auth";
 
 interface IAuthContext {
-  jwt?: string;
+  accessToken?: string;
   userInfo?: UserInfo;
   login: (logindata: LoginData) => Promise<void>;
   logout: () => Promise<void>;

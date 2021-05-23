@@ -13,13 +13,13 @@ const WeatherForecastsList = ({ apiService }: WeatherForecastsListProps) =>{
   const auth = useAuth();
 
   useEffect(() => {
-    apiService.getWeatherForecasts(auth && auth.jwt).then((forecasts) => {
+    apiService.getWeatherForecasts(auth && auth.accessToken).then((forecasts) => {
       setWeatherForecasts(forecasts);
     });
   }, []);
   
   const handleRefreshCache = async () => {
-    const forecasts = await apiService.refreshWeatherCache(auth && auth.jwt);
+    const forecasts = await apiService.refreshWeatherCache(auth && auth.accessToken);
     setWeatherForecasts(forecasts);
 
     setShowCacheRefreshedNotification(true);

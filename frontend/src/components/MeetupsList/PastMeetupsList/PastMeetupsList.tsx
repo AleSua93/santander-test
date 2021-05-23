@@ -16,18 +16,18 @@ const PastMeetupsList = ({ apiService }: PastMeetupsListProps) =>{
   }, []);
 
   const refreshMeetups = async() => {
-    apiService.getPastMeetups(auth && auth?.jwt).then((meetups) => {
+    apiService.getPastMeetups(auth && auth?.accessToken).then((meetups) => {
       setMeetups(meetups);
     });
   }
 
   const handleMeetupCheckIn = async (meetupId: number) => {
-    await apiService.checkInToMeetup(meetupId, auth?.jwt);
+    await apiService.checkInToMeetup(meetupId, auth?.accessToken);
     refreshMeetups();
   }
 
   const handleMeetupCheckOut = async (meetupId: number) => {
-    await apiService.checkOutFromMeetup(meetupId, auth?.jwt);
+    await apiService.checkOutFromMeetup(meetupId, auth?.accessToken);
     refreshMeetups();
   }
 

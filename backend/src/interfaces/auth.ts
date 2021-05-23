@@ -6,3 +6,13 @@ export interface JWTPayload {
   email: string;
   isAdmin: boolean;
 }
+
+export interface TokenResponse {
+  accessToken: string;
+}
+
+export type TokenPair = {
+  accessToken: string;
+  refreshToken: string;
+  refreshExpirationDate: Date;
+}

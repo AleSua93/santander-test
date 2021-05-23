@@ -1,8 +1,9 @@
 import { Model, Optional, DataTypes } from 'sequelize';
 import { sequelize } from './index';
 import Sequelize from 'sequelize';
-import Role, { RoleInstance } from './role';
+import { RoleInstance } from './role';
 import { MeetupInstance } from './meetup';
+import { RefreshTokenInstance } from './refresh-token';
 
 export interface UserAttributes {
   id: number;
@@ -11,11 +12,6 @@ export interface UserAttributes {
   password: string;
 };
 
-/*
-  We have to declare the AuthorCreationAttributes to
-  tell Sequelize and TypeScript that the property id,
-  in this case, is optional to be passed at creation time
-*/
 interface UserCreationAttributes
   extends Optional<UserAttributes, 'id'> {}
 
@@ -24,10 +20,12 @@ export interface UserInstance
   UserAttributes {
       createdAt?: Date;
       updatedAt?: Date;
-      role: RoleInstance;
       getRoles: Sequelize.BelongsToManyGetAssociationsMixin<RoleInstance>;
       getMeetups: Sequelize.BelongsToManyGetAssociationsMixin<MeetupInstance>;
       addMeetup: Sequelize.BelongsToManyAddAssociationMixin<UserInstance, MeetupInstance>;
+      createRefreshToken: Sequelize.HasOneCreateAssociationMixin<RefreshTokenInstance>;
+      getRefreshToken: Sequelize.HasOneGetAssociationMixin<RefreshTokenInstance>;
+      setRefreshToken: Sequelize.HasOneSetAssociationMixin<UserInstance, RefreshTokenInstance>;
     }
 
 const User = sequelize.define<UserInstance>(

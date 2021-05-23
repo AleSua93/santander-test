@@ -24,7 +24,7 @@ const Navbar =() =>{
                   <img className="h-8 w-8" src={santander} alt="Santander logo" />
                 </Link>
               </div>
-              {auth && auth.jwt ?
+              {auth && auth.accessToken ?
                 <div className="hidden md:block">
                   <div className="ml-5 flex items-baseline space-x-4">
                     <Link to="/" className="text-santander-red hover:bg-santander-red hover:text-white px-3 py-2 rounded-md text-sm font-medium">
@@ -42,7 +42,7 @@ const Navbar =() =>{
                 </div>
               : <></> }
             </div>
-            {auth && auth.jwt ?
+            {auth && auth.accessToken ?
               <div className="-mr-2 flex">
                 <div className="text-gray-700 m-2 invisible md:visible">
                   Hello, {auth.userInfo && auth.userInfo.username}
