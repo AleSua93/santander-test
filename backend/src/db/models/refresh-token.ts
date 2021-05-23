@@ -1,6 +1,7 @@
 import { Model, Optional, DataTypes } from 'sequelize';
 import { sequelize } from './index';
-import User from './user';
+import Sequelize from 'sequelize';
+import User, { UserInstance } from './user';
 
 export interface RefreshTokenAttributes {
   id: number;
@@ -16,6 +17,7 @@ export interface RefreshTokenInstance
   RefreshTokenAttributes {
       createdAt?: Date;
       updatedAt?: Date;
+      getUser: Sequelize.BelongsToGetAssociationMixin<UserInstance>;
     }
 
 const RefreshToken = sequelize.define<RefreshTokenInstance>(
@@ -40,6 +42,8 @@ const RefreshToken = sequelize.define<RefreshTokenInstance>(
 );
 
 User.hasOne(RefreshToken);
-RefreshToken.belongsTo(User);
+RefreshToken.belongsTo(User, {
+  foreignKey: "userId"
+});
 
 export default RefreshToken;

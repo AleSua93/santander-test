@@ -10,3 +10,9 @@ export interface JWTPayload {
 export interface TokenResponse {
   accessToken: string;
 }
+
+export type TokenPair = {
+  accessToken: string;
+  refreshToken: string;
+  refreshExpirationDate: Date;
+}

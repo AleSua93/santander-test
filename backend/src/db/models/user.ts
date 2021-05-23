@@ -1,7 +1,7 @@
 import { Model, Optional, DataTypes } from 'sequelize';
 import { sequelize } from './index';
 import Sequelize from 'sequelize';
-import Role, { RoleInstance } from './role';
+import { RoleInstance } from './role';
 import { MeetupInstance } from './meetup';
 import { RefreshTokenInstance } from './refresh-token';
 
