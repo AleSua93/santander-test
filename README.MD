@@ -77,8 +77,8 @@ Dado que no hay un CRUD de usuarios implementado, los dos usuarios disponibles s
 Acá hay muchas opciones... yo haría algo parecido a lo siguiente: tener un pipeline por componente del sistema (en este caso sería uno para front y otro para back). Cada pipeline tiene 3 stages: `testing`, `dev`, y `prod`. 
 
 - `testing` corre los tests unitarios (o que no requieran de varios servicios) y se ejecuta con pushes a cualquier branch del repo. 
-- `dev` se ejecuta en pushes a la development branch, deploya recursos en el entorno de desarrollo, y corre tests de integración y e2e. 
-- Finalmente, `prod` se ejecuta con pushes a la main branch, deploya en prod y también corre tests de integration/e2e.
+- `dev` se ejecuta en merges a la development branch, deploya recursos en el entorno de desarrollo, y corre tests de integración y e2e. 
+- Finalmente, `prod` se ejecuta con merges a la main branch, deploya en prod y también corre tests de integration/e2e.
 
 Esto es algo muy general, devops no es mi área de expertise (aunque es interesante).
 
