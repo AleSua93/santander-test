@@ -26,7 +26,7 @@ Este proyecto consiste en una aplicación que permite:
 - El frontend está desarrollado con React + Typescript, con una UI apta para dispositivos mobiles (responsive).
 - El server está hecho con Express + Typescript.
 - Para los pronósticos del clima se utilizó la [API de Weatherbit](https://www.weatherbit.io/). Los mismos se cachean en un archivo _.json_ dentro del server mismo. El refresh de este cache se hace de forma manual en el panel de admin.
-- La permanencia se logró a través de una base de datos de SQLite, a través del ORM [sequelize](https://sequelize.org/).
+- La permanencia se logró a través de una base de datos de SQLite, interactuando con la misma a través del ORM [Sequelize](https://sequelize.org/).
 - La autenticación y autorización se lograron utilizando JWT (en el backend se implementaron los endpoints y la lógica para usar tokens de acceso y de refresh; por cuestiones de tiempo en el frontend solo se implementó el uso de tokens de acceso)
 - La API se autodocumenta utilizando SwaggerUI. Corriendo el server localmente, se puede acceder a los docs en `http://localhost:5000/api/docs`.
 - Hay unit tests para la lógica del cálculo de cajas de birra. No se llegaron a implementar 
@@ -87,4 +87,6 @@ Esto es algo muy general, devops no es mi área de expertise (aunque es interesa
 - Habría que implementar la lógica para los refresh tokens en el frontend. How solo hay access tokens y, como se guardan en memoria, al expirar o recargar la página hay que volver a autenticarse (los tokens de acceso se guardan en memoria por cuestiones de seguridad, se podrían haber guardado en local storage, por ejemplo, pero no es lo más seguro)
 - Tests! Lo que implementé fueron unos unit tests básicos para la única lógica de negocio de la app (el cálculo de birras), pero faltaron integration y e2e (estuve como 1 hora tratando de correr programáticamente las migraciones en la mock db y desistí). Tests de UI también se podrían agregar, pero no se me ocurrieron casos específicos para esto fuera de smoke tests
 genéricos.
+- La idea del cache implementado no es que se haga manualmente, sino que haya un cron (o mejor aun, una función serverless) que le pegue al endpoint de refresh una vez por día para actualizar. Para no hacerla demasiada complicada, en la app se implementó la posibilidad de hacerlo manual desde el panel de admin.
 - Cosas mencionadas en la consigna que no agregué: i11n, lógica de retries, circuit breaker pattern (esto de hecho nunca lo implementé, vi que para Express hay un [middleware](https://www.npmjs.com/package/express-circuit-breaker) que estaría bueno chusmear).
+- Obviamente hay un montón de cosas que faltan relacionadas al funcionamiento básico (registro/creación de usuarios, edición y borrado de meetups, etc.) que no se implementaron porque no eran parte de las user stories, pero en una app real no deberían faltar.
