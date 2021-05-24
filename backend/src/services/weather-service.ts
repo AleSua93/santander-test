@@ -33,7 +33,11 @@ export default class WeatherService {
       forecasts = JSON.parse(forecastsBuffer.toString());
     } catch (err) {
       console.log("Cache not found, refreshing...");
-      forecasts = await this.refreshCache();
+      try {
+        forecasts = await this.refreshCache();
+      } catch(err) {
+        throw new Error("Error fetching weather data, is API key ok?")
+      }
     }
     
     return forecasts;

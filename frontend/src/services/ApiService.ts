@@ -9,7 +9,7 @@ export default class ApiService {
     this.apiUrl = process.env.REACT_APP_API_URL;
   }
 
-  public async getWeatherForecasts(jwt?: string): Promise<WeatherForecast[]> {
+  public async getWeatherForecasts(jwt?: string): Promise<WeatherForecast[] | null> {
     const endpointUri = "/weather/forecasts";
 
     const options: RequestInit = {
@@ -18,15 +18,18 @@ export default class ApiService {
         Authorization: "Bearer " + jwt,
       }
     }
-
-    const response = await fetch(`${this.apiUrl}${endpointUri}`, options);
-    const data = await response.json();
     
+    let data: WeatherForecast[];
+    const response = await fetch(`${this.apiUrl}${endpointUri}`, options);
+    if (response.status === 500) {
+      return null;
+    }
+    data = await response.json();
     return data;
   }
 
 
-  public async refreshWeatherCache(jwt?: string): Promise<WeatherForecast[]> {
+  public async refreshWeatherCache(jwt?: string): Promise<WeatherForecast[] | null> {
     const endpointUri = "/weather/cache";
 
     const options: RequestInit = {
@@ -37,6 +40,9 @@ export default class ApiService {
     }
 
     const response = await fetch(`${this.apiUrl}${endpointUri}`, options);
+    if (response.status === 500) {
+      return null;
+    }
     const data = await response.json();
     
     return data;

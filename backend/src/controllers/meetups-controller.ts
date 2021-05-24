@@ -59,12 +59,16 @@ class MeetupsController implements Controller {
       }
       
       const meetupAttributes = req.body as MeetupAttributes;
-      const forecast = await this.weatherService.getForecast(meetupAttributes.date);
+      try {
+        const forecast = await this.weatherService.getForecast(meetupAttributes.date);
       
-      if (forecast) {
-        meetupAttributes.tempInCelsius = forecast.temp;
-        meetupAttributes.estimatedBeerPacks = 
-          this.beerService.getNumBeerPacks(forecast.temp, meetupAttributes.numPeople);
+        if (forecast) {
+          meetupAttributes.tempInCelsius = forecast.temp;
+          meetupAttributes.estimatedBeerPacks = 
+            this.beerService.getNumBeerPacks(forecast.temp, meetupAttributes.numPeople);
+        }
+      } catch(err) {
+        console.log("Weather data not found, creating without forecasts...");
       }
 
       const meetup = await Meetup.create({
@@ -233,21 +237,21 @@ class MeetupsController implements Controller {
   /**
    * @swagger
    * /meetups/upcoming/:id/subscribe:
-   * delete:
-   *   summary: Unsubscribes from specified meetup
-   *   tags:
-   *     - Meetups
-   *   responses:
-   *     '200':
-   *       description: "Unsubscribe successful"
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/Meetup'
-   *     '400':
-   *       description: "Bad request"
-   *     '401':
-   *       description: "Unauthorized"
+   *  delete:
+   *    summary: Unsubscribes from specified meetup
+   *    tags:
+   *      - Meetups
+   *    responses:
+   *      '200':
+   *        description: "Unsubscribe successful"
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Meetup'
+   *      '400':
+   *        description: "Bad request"
+   *      '401':
+   *        description: "Unauthorized"
    */
   private async unsubscribeFromMeetup(req: Request, res: Response): Promise<void> {
     try {

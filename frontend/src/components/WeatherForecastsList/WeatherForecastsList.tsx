@@ -8,13 +8,18 @@ type WeatherForecastsListProps = {
 }
 
 const WeatherForecastsList = ({ apiService }: WeatherForecastsListProps) =>{
-  const [weatherForecasts, setWeatherForecasts] = useState<WeatherForecast[] | null>([]);
+  const [weatherForecasts, setWeatherForecasts] = useState<WeatherForecast[] | null>(null);
+  const [error, setError] = useState<string>("");
   const [showCacheRefreshedNotification, setShowCacheRefreshedNotification] = useState<boolean>(false);
   const auth = useAuth();
 
   useEffect(() => {
     apiService.getWeatherForecasts(auth && auth.accessToken).then((forecasts) => {
-      setWeatherForecasts(forecasts);
+      if (forecasts) {
+        setWeatherForecasts(forecasts);
+      } else {
+        setError("Could not fetch forecasts");
+      }
     });
   }, []);
   
@@ -52,7 +57,7 @@ const WeatherForecastsList = ({ apiService }: WeatherForecastsListProps) =>{
                   <div><span className="font-bold">Temp: </span>{forecast.temp} °C</div>
               </li>
             })
-          :""}
+          : error}
         </ul>
       </div>
     </>

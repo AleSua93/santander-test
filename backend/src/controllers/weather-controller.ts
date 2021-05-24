@@ -50,7 +50,13 @@ class WeatherController implements Controller {
         return;
       }
 
-      const weatherForecasts: WeatherForecast[] = await this.weatherService.getForecasts();
+      let weatherForecasts: WeatherForecast[];
+      try {
+        weatherForecasts = await this.weatherService.getForecasts();
+      } catch(err) {
+        res.status(500).json("Could not fetch weather forecasts");
+        return;
+      }
 
       res.status(200).json(weatherForecasts);
     } catch (err) {

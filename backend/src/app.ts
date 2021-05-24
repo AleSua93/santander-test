@@ -17,12 +17,14 @@ class App {
     this.app = express();
     this.port = port;
 
-    this.initializeSwagger();
-    this.initializeControllers(controllers);
     this.initializeMiddlewares();
+    this.initializeControllers(controllers);
   }
 
   private initializeMiddlewares() {
+    // IMPORTANT: always initialize swagger first
+    this.initializeSwagger();
+
     // We're not configuring cors now, but a real app should have it
     this.app.use(cors());
     this.app.use(cookieParser())
@@ -46,7 +48,7 @@ class App {
         openapi: '3.0.0',
         info: {
           title: "Meetups Santander Challenge API",
-          description: "API docs for the Meetups challenge",
+          description: "Docs for the Meetups API",
           version: "1.0.0"
         },
         contact: {
